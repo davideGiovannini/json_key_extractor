@@ -2,99 +2,20 @@ extern crate argparse;
 extern crate serde_json;
 
 use argparse::{ArgumentParser, StoreOption, StoreTrue};
-use serde_json::{Value, Number};
+use serde_json::Value;
 use std::io::BufReader;
 use std::io::BufRead;
 use std::fs::File;
-use std::collections::{HashMap, HashSet};
 use std::io::{Read, stdin};
-use std::iter::FromIterator;
 
-use std::ops::Add;
+mod data;
+use data::Case;
 
-#[derive(Debug)]
-enum Case {
-    Value(Type),
-    Values(HashSet<Type>),
-    Array(Vec<Case>),
-    Object(HashMap<String, Case>),
-    Null,
-    Multi(Vec<Case>),
-}
+mod parsing;
+use parsing::process_element;
 
-impl Case {
-    fn from_number(number: Number) -> Case {
-        if number.is_f64() {
-            Case::Value(Type::Float)
-        } else {
-            Case::Value(Type::Int)
-        }
-    }
-}
-
-impl Add for Case{
-    type Output = Case;
-
-    fn add(self, other: Case) -> Case {
-        use Case::*;
-
-        match (self, other) {
-            (Value(val_a), Value(val_b)) => {
-            if val_a == val_b {
-                Value(val_a)
-            } else {
-                let mut set: HashSet<Type> = Default::default();
-                set.insert(val_a);
-                set.insert(val_b);
-                Values(set)
-            }
-        }
-        (Values(mut vals), Value(val)) => {
-            vals.insert(val);
-            Values(vals)
-        }
-        (Value(val), Values(mut vals)) => {
-            vals.insert(val);
-            Values(vals)
-        }
-        (Values(vals_a), Values(vals_b)) => Values(vals_a.union(&vals_b).cloned().collect()),
-        (Null, a) => a,
-        (b, Null) => b,
-        (Object(obj_a), Object(obj_b)) => merge_objects(obj_a, obj_b),
-        (Array(arr), Value(val)) => Multi(vec![Array(arr), Value(val)]),
-        (Array(arr), Values(vals)) => Multi(vec![Array(arr), Values(vals)]),
-        (Value(val), Array(arr)) => Multi(vec![Array(arr), Value(val)]),
-        (Value(val), Object(obj)) => Multi(vec![Object(obj), Value(val)]),
-        (Values(vals), Array(arr)) => Multi(vec![Array(arr), Values(vals)]),
-        (Values(vals), Object(obj)) => Multi(vec![Object(obj), Values(vals)]),
-        (Array(arr_a), Array(arr_b)) => merge_arrays(arr_a, arr_b),
-        (Array(arr), Object(obj)) => Multi(vec![Object(obj), Array(arr)]),
-        (Object(obj), Value(val)) => Multi(vec![Object(obj), Value(val)]),
-        (Object(obj), Values(vals)) => Multi(vec![Object(obj), Values(vals)]),
-        (Object(obj), Array(arr)) => Multi(vec![Object(obj), Array(arr)]),
-        (Multi(mut multi_a), Multi(multi_b)) => {
-            multi_a.extend(multi_b);
-            Multi(multi_a)
-        }
-        (Multi(mut multi_a), smt) => {
-            multi_a.push(smt);
-            Multi(multi_a)
-        }
-        (smt, Multi(mut multi_a)) => {
-            multi_a.push(smt);
-            Multi(multi_a)
-        }
-        }
-    }
-}
-
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
-enum Type {
-    Float,
-    Int,
-    String,
-    Boolean,
-}
+mod printer;
+use printer::pretty_print;
 
 fn main() {
     let mut verbose = false;
@@ -115,15 +36,12 @@ fn main() {
     } else {
         process_input(File::open(input_path.unwrap()).unwrap())
     };
-    println!("{:#?}", result);
+    println!("{}", result);
 }
 
-
-
-fn process_input<Source: Read + Sized>(input: Source)
+fn process_input<Source: Read + Sized>(input: Source) -> String
     where Source: Read
 {
-
     let input = BufReader::new(input);
 
     let mut case = Case::Null;
@@ -134,96 +52,5 @@ fn process_input<Source: Read + Sized>(input: Source)
         let new_case = process_element(v);
         case = case + new_case;
     }
-
-    println!("{}", pretty_print(&case, ""));
-}
-
-
-
-fn process_element(value: Value) -> Case {
-    match value {
-        Value::Object(map) => {
-            let mut object_map: HashMap<String, Case> = Default::default();
-
-            for (key, value) in map {
-                let children = process_element(value);
-                object_map.insert(key, children);
-            }
-            Case::Object(object_map)
-        }
-        Value::Null => Case::Null,
-        Value::Bool(_) => Case::Value(Type::Boolean),
-        Value::Number(number) => Case::from_number(number),
-        Value::String(_) => Case::Value(Type::String),
-        Value::Array(values) => {
-            compact_array(Vec::from_iter(values.into_iter().map(process_element)))
-        }
-    }
-}
-
-
-fn merge_objects(mut obj_a: HashMap<String, Case>, obj_b: HashMap<String, Case>) -> Case {
-    for (k,v) in obj_b{
-        obj_a.insert(k, v);
-    }
-    return Case::Object(obj_a)
-}
-fn merge_arrays(mut arr_a: Vec<Case>, arr_b: Vec<Case>) -> Case {
-    arr_a.extend(arr_b);
-
-    compact_array(arr_a)
-}
-
-
-fn compact_array(arr: Vec<Case>)-> Case{
-    use Case::*;
-
-    let arr = match arr.into_iter().fold(Case::Null, Case::add){
-        Multi(arr) => arr,
-        Array(arr) => arr,
-        smt => vec![smt]
-    };
-    Case::Array(arr)
-}
-
-
-
-fn pretty_print(case: &Case, prefix: &str) -> String {
-    use Case::*;
-
-    let mut output = String::new();
-
-    match *case {
-        Value(ref val) => return format!("{:#?}", val).to_lowercase(),
-        Values(ref vals) => return format!("{:#?}", vals).to_lowercase(),
-        Array(ref arr) => {
-            if arr.len() == 1{
-                match arr[0]{
-                    Case::Value(ref t) => return format!("[{:#?}]", t).to_lowercase(),
-                    Case::Object(_) => return format!("[object]\n{}", pretty_print(&arr[0], &format!("[{}]", prefix))),
-                    _ => (),
-                }
-            }
-            return format!("{:#?}", arr);
-        }
-        Object(ref obj) => {
-            let mut keys = obj.keys().collect::<Vec<&String>>();
-            keys.sort();
-            output.push_str("object\n");
-            for k in keys {
-                if prefix.is_empty(){
-                output.push_str(&format!("{:<60}", k));
-            }else{
-                output.push_str(&format!("{:<60}", format!("{}.{}", prefix, k)));
-            }
-                output.push_str(&format!("{:>20}", pretty_print(obj.get(k).unwrap(), &format!("{}.{}", prefix, k))));
-                output.push('\n');
-            }
-            "".to_string()
-        }
-        Null => return "<null>".to_string(),
-        Multi(ref cases) => String::new(),
-    };
-
-    return output;
+    pretty_print(&case, "")
 }
