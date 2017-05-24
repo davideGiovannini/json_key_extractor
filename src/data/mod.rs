@@ -4,7 +4,11 @@ use std::collections::{HashMap, HashSet};
 
 use std::ops::Add;
 
-#[derive(Debug)]
+
+#[cfg(test)]
+mod test_data;
+
+#[derive(Debug, PartialEq)]
 pub enum Case {
     Value(Type),
     Values(HashSet<Type>),
@@ -21,6 +25,13 @@ impl Case {
         } else {
             Case::Value(Type::Int)
         }
+    }
+
+    pub fn new_values(value_a: Type, value_b: Type)-> Case{
+        let mut hashset =  HashSet::with_capacity(2);
+        hashset.insert(value_a);
+        hashset.insert(value_b);
+        Case::Values(hashset)
     }
 }
 
@@ -77,7 +88,7 @@ impl Add for Case {
     }
 }
 
-#[derive(Clone, Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub enum Type {
     Float,
     Int,
@@ -87,7 +98,12 @@ pub enum Type {
 
 fn merge_objects(mut obj_a: HashMap<String, Case>, obj_b: HashMap<String, Case>) -> Case {
     for (k, v) in obj_b {
-        obj_a.insert(k, v);
+        if obj_a.contains_key(&k){
+            let a_val = obj_a.remove(&k).unwrap();
+            obj_a.insert(k, a_val + v);
+        }else{
+            obj_a.insert(k, v);
+        }
     }
     Case::Object(obj_a)
 }

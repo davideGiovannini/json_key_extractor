@@ -8,7 +8,13 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
 
     match *case {
         Value(ref val) => return format!("{:#?}", val).to_lowercase(),
-        Values(ref vals) => return format!("{:#?}", vals).to_lowercase(),
+        Values(ref vals) => {
+            return vals.into_iter()
+                       .map(|a| format!("{:?}", a).to_lowercase())
+                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
+                       .to_lowercase()
+        }
+
         Array(ref arr) => {
             if arr.len() == 1 {
                 match arr[0] {
@@ -40,8 +46,40 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
             "".to_string()
         }
         Null => return "<null>".to_string(),
-        Multi(ref cases) => String::new(),
+        Multi(ref cases) =>
+            return cases.into_iter()
+                       .map(print_type)
+                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
+                       .to_lowercase()
     };
 
     output
+}
+
+
+fn print_type(case: &Case) -> String{
+    use Case::*;
+    match *case {
+        Value(ref val) => return format!("{:#?}", val).to_lowercase(),
+        Values(ref vals) => {
+            return vals.into_iter()
+                       .map(|a| format!("{:?}", a).to_lowercase())
+                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
+                       .to_lowercase()
+        }
+
+        Array(ref arr) => {
+            if arr.len() == 1 {
+                match arr[0] {
+                    Case::Value(ref t) => return format!("[{:#?}]", t).to_lowercase(),
+                    Case::Object(_) => {
+                        return "[object]".to_string()
+                    }
+                    _ => (),
+                }
+            }
+            return format!("{:#?}", arr);
+        }
+        _ => "type".to_string()
+    }
 }

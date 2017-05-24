@@ -1,6 +1,10 @@
 extern crate argparse;
 extern crate serde_json;
 
+#[cfg(test)]
+#[macro_use]
+extern crate quickcheck;
+
 use argparse::{ArgumentParser, StoreOption, StoreTrue};
 use serde_json::Value;
 use std::io::BufReader;
