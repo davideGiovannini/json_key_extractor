@@ -15,9 +15,9 @@ pub fn process_element(value: Value) -> Case {
             Case::Object(object_map)
         }
         Value::Null => Case::Null,
-        Value::Bool(_) => Case::Value(Type::Boolean),
+        Value::Bool(_) => Case::from_boolean(),
         Value::Number(number) => Case::from_number(number),
-        Value::String(_) => Case::Value(Type::String),
+        Value::String(_) => Case::from_string(),
         Value::Array(values) => {
             compact_array(Vec::from_iter(values.into_iter().map(process_element)))
         }

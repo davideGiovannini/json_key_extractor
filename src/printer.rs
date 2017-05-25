@@ -7,18 +7,14 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
     let mut output = String::new();
 
     match *case {
-        Value(ref val) => return format!("{:#?}", val).to_lowercase(),
         Values(ref vals) => {
-            return vals.into_iter()
-                       .map(|a| format!("{:?}", a).to_lowercase())
-                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
-                       .to_lowercase()
+            return format!("{}", vals)
         }
 
         Array(ref arr) => {
             if arr.len() == 1 {
                 match arr[0] {
-                    Case::Value(ref t) => return format!("[{:#?}]", t).to_lowercase(),
+                    Case::Values(ref t) => return format!("[{}]", t).to_lowercase(),
                     Case::Object(_) => {
                         return format!("[object]\n{}",
                                        pretty_print(&arr[0], &format!("[{}]", prefix)))
@@ -60,18 +56,14 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
 fn print_type(case: &Case) -> String{
     use Case::*;
     match *case {
-        Value(ref val) => return format!("{:#?}", val).to_lowercase(),
         Values(ref vals) => {
-            return vals.into_iter()
-                       .map(|a| format!("{:?}", a).to_lowercase())
-                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
-                       .to_lowercase()
+            return format!("{}", vals)
         }
 
         Array(ref arr) => {
             if arr.len() == 1 {
                 match arr[0] {
-                    Case::Value(ref t) => return format!("[{:#?}]", t).to_lowercase(),
+                    Case::Values(ref t) => return format!("[{}]", t).to_lowercase(),
                     Case::Object(_) => {
                         return "[object]".to_string()
                     }

@@ -3,6 +3,7 @@
 use super::Case;
 use super::Case::*;
 use super::Type;
+use super::Values;
 
 use quickcheck::{Arbitrary, Gen, empty_shrinker};
 
@@ -20,11 +21,10 @@ impl Arbitrary for Type {
 
 quickcheck! {
       fn prop(type_a: Type, type_b: Type) -> bool {
-        println!("{:?}", type_a);
           if type_a == type_b{
-            Value(type_a) + Value(type_b) == Value(type_a)
+            Values::new(type_a) + Values::new(type_b) == Values::new(type_a)
           }else{
-            Value(type_a) + Value(type_b) == Case::new_values(type_a, type_b)
+            Values::new(type_a) + Values::new(type_b) == Values::from_values(&[type_a, type_b])
           }
       }
   }

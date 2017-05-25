@@ -4,14 +4,16 @@ use std::collections::{HashMap, HashSet};
 
 use std::ops::Add;
 
+mod values;
+pub use self::values::*;
+
 
 #[cfg(test)]
 mod test_data;
 
 #[derive(Debug, PartialEq)]
 pub enum Case {
-    Value(Type),
-    Values(HashSet<Type>),
+    Values(Values),
     Array(Vec<Case>),
     Object(HashMap<String, Case>),
     Null,
@@ -21,17 +23,25 @@ pub enum Case {
 impl Case {
     pub fn from_number(number: Number) -> Case {
         if number.is_f64() {
-            Case::Value(Type::Float)
+            Case::Values(Values::new(Type::Float))
         } else {
-            Case::Value(Type::Int)
+            Case::Values(Values::new(Type::Int))
         }
+    }
+
+    pub fn from_boolean() -> Case{
+        Case::Values(Values::new(Type::Boolean))
+    }
+
+    pub fn from_string() -> Case{
+        Case::Values(Values::new(Type::String))
     }
 
     pub fn new_values(value_a: Type, value_b: Type)-> Case{
         let mut hashset =  HashSet::with_capacity(2);
         hashset.insert(value_a);
         hashset.insert(value_b);
-        Case::Values(hashset)
+        Case::Values(Values::from_values(&[value_a, value_b]))
     }
 }
 
@@ -42,32 +52,11 @@ impl Add for Case {
         use Case::*;
 
         match (self, other) {
-            (Value(val_a), Value(val_b)) => {
-                if val_a == val_b {
-                    Value(val_a)
-                } else {
-                    let mut set: HashSet<Type> = Default::default();
-                    set.insert(val_a);
-                    set.insert(val_b);
-                    Values(set)
-                }
-            }
-            (Values(mut vals), Value(val)) |
-            (Value(val), Values(mut vals)) => {
-                vals.insert(val);
-                Values(vals)
-            }
-            (Values(vals_a), Values(vals_b)) => Values(vals_a.union(&vals_b).cloned().collect()),
+            (Values(vals_a), Values(vals_b)) => Values(vals_a+vals_b),
             (Null, smt) | (smt, Null) => smt,
             (Object(obj_a), Object(obj_b)) => merge_objects(obj_a, obj_b),
-            (Array(arr), Value(val)) |
-            (Value(val), Array(arr)) => Multi(vec![Array(arr), Value(val)]),
-
             (Array(arr), Values(vals)) |
             (Values(vals), Array(arr)) => Multi(vec![Array(arr), Values(vals)]),
-
-            (Value(val), Object(obj)) |
-            (Object(obj), Value(val)) => Multi(vec![Object(obj), Value(val)]),
 
             (Object(obj), Values(vals)) |
             (Values(vals), Object(obj)) => Multi(vec![Object(obj), Values(vals)]),
@@ -88,13 +77,7 @@ impl Add for Case {
     }
 }
 
-#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
-pub enum Type {
-    Float,
-    Int,
-    String,
-    Boolean,
-}
+
 
 fn merge_objects(mut obj_a: HashMap<String, Case>, obj_b: HashMap<String, Case>) -> Case {
     for (k, v) in obj_b {
