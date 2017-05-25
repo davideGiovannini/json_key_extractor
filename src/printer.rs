@@ -63,9 +63,9 @@ fn print_type(case: &Case) -> String{
         Array(ref arr) => {
             if arr.len() == 1 {
                 match arr[0] {
-                    Case::Values(ref t) => return format!("[{}]", t).to_lowercase(),
-                    Case::Object(_) => {
-                        return "[object]".to_string()
+                    Case::Values(ref t) => return format!("[{}]", t),
+                    Case::Object(ref obj) => {
+                        return format!("[{}]", obj)
                     }
                     _ => (),
                 }

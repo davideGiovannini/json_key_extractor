@@ -9,6 +9,7 @@ pub enum Type {
     String,
     Boolean,
 }
+
 impl fmt::Display for Type {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -44,9 +45,9 @@ impl fmt::Display for Values {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 
         for (i,t) in self.data_types.iter().enumerate(){
-            write!(f, "{}", t);
+            write!(f, "{}", t)?;
             if i < self.data_types.len() -1{
-                write!(f, "|");
+                write!(f, "|")?;
             }
         }
         write!(f, "")

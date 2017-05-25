@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use serde_json::Value;
-use data::{Case, compact_array, Type};
+use data::{Case, compact_array};
 use std::iter::FromIterator;
 
 pub fn process_element(value: Value) -> Case {
@@ -12,7 +12,7 @@ pub fn process_element(value: Value) -> Case {
                 let children = process_element(value);
                 object_map.insert(key, children);
             }
-            Case::Object(object_map)
+            Case::from_dict(object_map)
         }
         Value::Null => Case::Null,
         Value::Bool(_) => Case::from_boolean(),

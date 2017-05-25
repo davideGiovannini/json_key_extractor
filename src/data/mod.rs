@@ -1,12 +1,14 @@
 
 use serde_json::Number;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use std::ops::Add;
 
 mod values;
 pub use self::values::*;
 
+mod objects;
+pub use self::objects::*;
 
 #[cfg(test)]
 mod test_data;
@@ -15,7 +17,7 @@ mod test_data;
 pub enum Case {
     Values(Values),
     Array(Vec<Case>),
-    Object(HashMap<String, Case>),
+    Object(Object),
     Null,
     Multi(Vec<Case>),
 }
@@ -37,11 +39,8 @@ impl Case {
         Case::Values(Values::new(Type::String))
     }
 
-    pub fn new_values(value_a: Type, value_b: Type)-> Case{
-        let mut hashset =  HashSet::with_capacity(2);
-        hashset.insert(value_a);
-        hashset.insert(value_b);
-        Case::Values(Values::from_values(&[value_a, value_b]))
+    pub fn from_dict(dict: HashMap<String, Case>) -> Case{
+        Case::Object(Object::from(dict))
     }
 }
 
@@ -54,7 +53,7 @@ impl Add for Case {
         match (self, other) {
             (Values(vals_a), Values(vals_b)) => Values(vals_a+vals_b),
             (Null, smt) | (smt, Null) => smt,
-            (Object(obj_a), Object(obj_b)) => merge_objects(obj_a, obj_b),
+            (Object(obj_a), Object(obj_b)) => Object(obj_a + obj_b),
             (Array(arr), Values(vals)) |
             (Values(vals), Array(arr)) => Multi(vec![Array(arr), Values(vals)]),
 
@@ -78,18 +77,6 @@ impl Add for Case {
 }
 
 
-
-fn merge_objects(mut obj_a: HashMap<String, Case>, obj_b: HashMap<String, Case>) -> Case {
-    for (k, v) in obj_b {
-        if obj_a.contains_key(&k){
-            let a_val = obj_a.remove(&k).unwrap();
-            obj_a.insert(k, a_val + v);
-        }else{
-            obj_a.insert(k, v);
-        }
-    }
-    Case::Object(obj_a)
-}
 fn merge_arrays(mut arr_a: Vec<Case>, arr_b: Vec<Case>) -> Case {
     arr_a.extend(arr_b);
 
