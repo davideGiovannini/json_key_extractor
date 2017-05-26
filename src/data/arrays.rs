@@ -39,12 +39,10 @@ impl Array {
         array
     }
 
-
     fn compact(&mut self) {
         use Case::*;
 
         let arr = match self.contents.drain(0..).fold(Case::Null, Case::add) {
-            Multi(arr) => arr,
             Array(arr) => arr.contents,
             smt => vec![smt],
         };

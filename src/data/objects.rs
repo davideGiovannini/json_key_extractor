@@ -21,16 +21,15 @@ impl Add for Object {
     type Output = Object;
 
     fn add(mut self, other: Object) -> Object {
-        let mut dict = HashMap::with_capacity(self.dict.len() + other.dict.len());
         for (k, v) in other.dict {
             if self.dict.contains_key(&k) {
                 let a_val = self.dict.remove(&k).unwrap();
-                dict.insert(k, v.add(a_val));
+                self.dict.insert(k, v.add(a_val));
             } else {
-                dict.insert(k, v);
+                self.dict.insert(k, v);
             }
         }
-        Object { dict }
+        Object { dict: self.dict }
     }
 }
 

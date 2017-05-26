@@ -22,7 +22,6 @@ pub enum Case {
     Array(Array),
     Object(Object),
     Null,
-    Multi(Vec<Case>),
 }
 
 impl Case {
@@ -58,27 +57,22 @@ impl Add for Case {
         use Case::*;
 
         match (self, other) {
-            (Values(vals_a), Values(vals_b)) => Values(vals_a + vals_b),
             (Null, smt) | (smt, Null) => smt,
-            (Object(obj_a), Object(obj_b)) => Object(obj_a + obj_b),
-            (Array(arr), Values(vals)) |
-            (Values(vals), Array(arr)) => Multi(vec![Array(arr), Values(vals)]),
 
-            (Object(obj), Values(vals)) |
-            (Values(vals), Object(obj)) => Multi(vec![Object(obj), Values(vals)]),
+            (Values(vals_a), Values(vals_b)) => Values(vals_a + vals_b),
+
+            (Object(obj_a), Object(obj_b)) => Object(obj_a + obj_b),
 
             (Array(arr_a), Array(arr_b)) => Case::Array(arr_a + arr_b),
+
             (Array(arr), Object(obj)) |
-            (Object(obj), Array(arr)) => Multi(vec![Object(obj), Array(arr)]),
-            (Multi(mut multi_a), Multi(multi_b)) => {
-                multi_a.extend(multi_b);
-                Multi(multi_a)
-            }
-            (Multi(mut multi_a), smt) |
-            (smt, Multi(mut multi_a)) => {
-                multi_a.push(smt);
-                Multi(multi_a)
-            }
+            (Object(obj), Array(arr)) => Case::from_vec(vec![Object(obj), Array(arr)]),
+
+            (Object(obj), Values(vals)) |
+            (Values(vals), Object(obj)) => Case::from_vec(vec![Object(obj), Values(vals)]),
+
+            (Array(arr), Values(vals)) |
+            (Values(vals), Array(arr)) => Case::from_vec(vec![Array(arr), Values(vals)]),
         }
     }
 }

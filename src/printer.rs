@@ -40,27 +40,6 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
             "".to_string()
         }
         Null => return "<null>".to_string(),
-        Multi(ref cases) => {
-            return cases
-                       .into_iter()
-                       .map(print_type)
-                       .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
-                       .to_lowercase()
-        }
     };
-
     output
-}
-
-
-fn print_type(case: &Case) -> String {
-    use Case::*;
-    match *case {
-        Values(ref vals) => return format!("{}", vals),
-
-        Array(ref arr) => {
-            return format!("{}", arr);
-        }
-        _ => "type".to_string(),
-    }
 }
