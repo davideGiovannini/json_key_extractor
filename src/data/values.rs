@@ -40,7 +40,7 @@ impl Values {
         Values { data_types }
     }
 
-    pub fn len(&self) -> usize{
+    pub fn len(&self) -> usize {
         self.data_types.len()
     }
 }
@@ -67,10 +67,8 @@ impl Add for Values {
 }
 
 
-impl Default for Values{
-    fn default()-> Values{
-        Values{
-            data_types: Default::default()
-        }
+impl Default for Values {
+    fn default() -> Values {
+        Values { data_types: Default::default() }
     }
 }

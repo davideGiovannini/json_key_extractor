@@ -10,11 +10,9 @@ pub struct Object {
     dict: HashMap<String, Case>,
 }
 
-impl Default for Object{
-    fn default()-> Self{
-        Object{
-            dict: Default::default()
-        }
+impl Default for Object {
+    fn default() -> Self {
+        Object { dict: Default::default() }
     }
 }
 
@@ -54,7 +52,7 @@ impl Object {
         self.dict.get(key)
     }
 
-    pub fn len(&self) -> usize{
+    pub fn len(&self) -> usize {
         self.dict.len()
     }
 }

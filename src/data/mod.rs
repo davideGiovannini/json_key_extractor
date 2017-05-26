@@ -2,6 +2,7 @@
 use serde_json::Number;
 use std::collections::HashMap;
 
+use std::iter::FromIterator;
 use std::ops::Add;
 
 mod values;
@@ -44,9 +45,11 @@ impl Case {
     pub fn from_dict(dict: HashMap<String, Case>) -> Case {
         Case::Object(Object::from(dict))
     }
+}
 
-    pub fn from_vec(elements: Vec<Case>) -> Case {
-        Case::Array(Array::from(elements))
+impl FromIterator<Case> for Case {
+    fn from_iter<T>(iter: T) -> Self where T: IntoIterator<Item = Case> {
+        Case::Array(Array::from_iter(iter))
     }
 }
 
@@ -66,13 +69,13 @@ impl Add for Case {
             (Array(arr_a), Array(arr_b)) => Case::Array(arr_a + arr_b),
 
             (Array(arr), Object(obj)) |
-            (Object(obj), Array(arr)) => Case::from_vec(vec![Object(obj), Array(arr)]),
+            (Object(obj), Array(arr)) => Case::from_iter(vec![Object(obj), Array(arr)]),
 
             (Object(obj), Values(vals)) |
-            (Values(vals), Object(obj)) => Case::from_vec(vec![Object(obj), Values(vals)]),
+            (Values(vals), Object(obj)) => Case::from_iter(vec![Object(obj), Values(vals)]),
 
             (Array(arr), Values(vals)) |
-            (Values(vals), Array(arr)) => Case::from_vec(vec![Array(arr), Values(vals)]),
+            (Values(vals), Array(arr)) => Case::from_iter(vec![Array(arr), Values(vals)]),
         }
     }
 }

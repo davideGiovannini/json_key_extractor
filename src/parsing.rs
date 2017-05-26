@@ -18,8 +18,6 @@ pub fn process_element(value: Value) -> Case {
         Value::Bool(_) => Case::from_boolean(),
         Value::Number(number) => Case::from_number(number),
         Value::String(_) => Case::from_string(),
-        Value::Array(values) => {
-            Case::from_vec(Vec::from_iter(values.into_iter().map(process_element)))
-        }
+        Value::Array(values) => Case::from_iter(values.into_iter().map(process_element)),
     }
 }
