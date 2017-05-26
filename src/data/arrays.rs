@@ -1,62 +1,93 @@
 use std::fmt;
 use std::ops::Add;
-use std::ops::Index;
 
 use super::Case;
+use super::{Object, Values};
 
 #[derive(Debug, PartialEq)]
 pub struct Array {
-    contents: Vec<Case>,
+    values: Values,
+    object: Object,
+    array: Box<Option<Array>>
+}
+
+impl Default for Array{
+    fn default() -> Array{
+        Array{
+            values: Default::default(),
+            object: Default::default(),
+            array: Box::new(None)
+        }
+    }
 }
 
 impl fmt::Display for Array {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.contents.len() == 1 {
-            match self.contents[0] {
-                Case::Values(ref t) => return write!(f, "[{}]", t),
-                Case::Object(ref obj) => return write!(f, "[{}]", obj),
-                _ => (),
-            }
+        let mut type_string = String::new();
+
+        if self.values.len() > 0{
+            type_string.push_str(&format!("{}", self.values));
         }
-        write!(f, "[array]")
+
+        if self.object.len() > 0{
+            type_string.push_str(&format!("{}", self.object));
+        }
+
+        if let Some(ref arr) = *self.array {
+            type_string.push_str(&format!("{}", arr));
+        }
+
+        write!(f, "[{}]", type_string)
     }
 }
 
 impl Add for Array {
     type Output = Array;
 
-    fn add(mut self, other: Array) -> Array {
-        self.contents.extend(other.contents);
-        self.compact();
-        Array { contents: self.contents }
+    fn add(mut self, mut other: Array) -> Array {
+        self.values = self.values + other.values;
+        self.object = self.object + other.object;
+
+
+        if self.array.is_none(){
+            self.array = other.array
+        }else if other.array.is_none(){
+
+        }else{
+            let arr_a = self.array.take().unwrap();
+            let arr_b = other.array.take().unwrap();
+            self.array = Box::new(Some(arr_a + arr_b));
+        }
+
+        self
     }
 }
 
 impl Array {
     pub fn from(elements: Vec<Case>) -> Array {
-        let mut array = Array { contents: elements };
-        array.compact();
+        let mut array: Array = Default::default();
+        for case in elements{
+            match case {
+                Case::Values(vals) => array.values = array.values + vals,
+                Case::Object(obj) => array.object = array.object + obj,
+                Case::Array(arr) => array = array + arr,
+                Case::Null => (),
+            }
+        }
         array
     }
 
-    fn compact(&mut self) {
-        use Case::*;
-
-        let arr = match self.contents.drain(0..).fold(Case::Null, Case::add) {
-            Array(arr) => arr.contents,
-            smt => vec![smt],
-        };
-        self.contents = arr;
+    pub fn len(&self) -> usize{
+        let array_len = if let Some(ref array) = *self.array { array.len()} else {0};
+        self.values.len() + self.object.len() + array_len
     }
 
-    pub fn len(&self) -> usize {
-        self.contents.len()
+    pub fn has_object(&self) -> bool{
+        self.object.len() > 0
     }
-}
 
-impl Index<usize> for Array {
-    type Output = Case;
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.contents[index]
+    pub fn object(&self) -> &Object{
+        &self.object
     }
 }
+

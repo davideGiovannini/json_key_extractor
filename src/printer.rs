@@ -1,45 +1,48 @@
 
 use data::Case;
+use data::Object;
 
 pub fn pretty_print(case: &Case, prefix: &str) -> String {
     use Case::*;
 
-    let mut output = String::new();
 
     match *case {
         Values(ref vals) => return format!("{}", vals),
 
         Array(ref arr) => {
-            if arr.len() == 1 {
-                match arr[0] {
-                    Case::Values(ref t) => return format!("[{}]", t).to_lowercase(),
-                    Case::Object(_) => {
-                        return format!("[object]\n{}",
-                                       pretty_print(&arr[0], &format!("[{}]", prefix)))
-                    }
-                    _ => (),
-                }
+            if arr.has_object() {
+                return format!("{:>20}\n{}",
+                               "[object]",
+                               pretty_print_object(arr.object(), &format!("[{}]", prefix)));
+            } else {
+                return format!("{}", arr);
             }
-            return format!("{:#?}", arr);
         }
-        Object(ref obj) => {
-            let mut keys = obj.keys().collect::<Vec<&String>>();
-            keys.sort();
-            output.push_str("object\n");
-            for k in keys {
-                if prefix.is_empty() {
-                    output.push_str(&format!("{:<60}", k));
-                } else {
-                    output.push_str(&format!("{:<60}", format!("{}.{}", prefix, k)));
-                }
-                output.push_str(&format!("{:>20}",
-                                        pretty_print(obj.get(k).unwrap(),
-                                                     &format!("{}.{}", prefix, k))));
-                output.push('\n');
-            }
-            "".to_string()
-        }
+        Object(ref obj) => return pretty_print_object(obj, prefix),
         Null => return "<null>".to_string(),
     };
+}
+
+
+fn pretty_print_object(object: &Object, prefix: &str) -> String {
+    let mut output = String::new();
+
+    let mut keys = object.keys().collect::<Vec<&String>>();
+    keys.sort();
+    for (i, k) in keys.iter().enumerate() {
+        let next_prefix = if prefix.is_empty() {
+            k.to_string()
+        } else {
+            format!("{}.{}", prefix, k)
+        };
+
+        output.push_str(&format!("{:<60}", next_prefix));
+
+        output.push_str(&format!("{:>20}", pretty_print(object.get(k).unwrap(), &next_prefix)));
+
+        if i < keys.len() - 1 {
+            output.push('\n');
+        }
+    }
     output
 }

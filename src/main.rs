@@ -50,11 +50,18 @@ fn process_input<Source: Read + Sized>(input: Source) -> String
 
     let mut case = Case::Null;
 
+    #[cfg(debug_assertions)]
+    println!("Starting");
+
     for line in input.lines() {
         let line = line.unwrap();
         let v: Value = serde_json::from_str(&line).unwrap();
         let new_case = process_element(v);
         case = case + new_case;
     }
+
+    #[cfg(debug_assertions)]
+    println!("Beginning printing phase");
+
     pretty_print(&case, "")
 }

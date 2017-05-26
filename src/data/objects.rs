@@ -10,6 +10,13 @@ pub struct Object {
     dict: HashMap<String, Case>,
 }
 
+impl Default for Object{
+    fn default()-> Self{
+        Object{
+            dict: Default::default()
+        }
+    }
+}
 
 impl fmt::Display for Object {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -45,5 +52,9 @@ impl Object {
 
     pub fn get(&self, key: &str) -> Option<&Case> {
         self.dict.get(key)
+    }
+
+    pub fn len(&self) -> usize{
+        self.dict.len()
     }
 }

@@ -39,6 +39,10 @@ impl Values {
         }
         Values { data_types }
     }
+
+    pub fn len(&self) -> usize{
+        self.data_types.len()
+    }
 }
 
 impl fmt::Display for Values {
@@ -59,5 +63,14 @@ impl Add for Values {
 
     fn add(self, other: Values) -> Values {
         Values { data_types: self.data_types.union(&other.data_types).cloned().collect() }
+    }
+}
+
+
+impl Default for Values{
+    fn default()-> Values{
+        Values{
+            data_types: Default::default()
+        }
     }
 }
