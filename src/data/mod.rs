@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use std::iter::FromIterator;
 use std::ops::Add;
 
+use regex;
+
 mod values;
 pub use self::values::*;
 
@@ -16,6 +18,10 @@ pub use self::arrays::*;
 
 #[cfg(test)]
 mod test_data;
+
+
+// This matches both simple dates like YYYY.MM.DD and timestamp like 2017-05-21T08:48:34.943983
+const DATE_PATTERN: &str = r"^\d{4}.\d{2}.\d{2}(T\d{2}:\d{2}:\d{2}.\d{6})?$";
 
 #[derive(Debug, PartialEq)]
 pub enum Case {
@@ -38,8 +44,17 @@ impl Case {
         Case::Values(Values::new(Type::Boolean))
     }
 
-    pub fn from_string() -> Case {
-        Case::Values(Values::new(Type::String))
+    pub fn from_string(string: &str) -> Case {
+        lazy_static! {
+            static ref DATE_REGEXP: regex::Regex =
+                    regex::Regex::new(DATE_PATTERN).unwrap();
+        }
+        let data_type = if DATE_REGEXP.is_match(string) {
+            Type::Date
+        } else {
+            Type::String
+        };
+        Case::Values(Values::new(data_type))
     }
 
     pub fn from_dict(dict: HashMap<String, Case>) -> Case {
@@ -48,7 +63,9 @@ impl Case {
 }
 
 impl FromIterator<Case> for Case {
-    fn from_iter<T>(iter: T) -> Self where T: IntoIterator<Item = Case> {
+    fn from_iter<T>(iter: T) -> Self
+        where T: IntoIterator<Item = Case>
+    {
         Case::Array(Array::from_iter(iter))
     }
 }

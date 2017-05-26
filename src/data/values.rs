@@ -8,6 +8,7 @@ pub enum Type {
     Int,
     String,
     Boolean,
+    Date,
 }
 
 impl fmt::Display for Type {
@@ -17,6 +18,7 @@ impl fmt::Display for Type {
             Type::Int => write!(f, "int"),
             Type::String => write!(f, "string"),
             Type::Boolean => write!(f, "bool"),
+            Type::Date => write!(f, "date"),
         }
     }
 }

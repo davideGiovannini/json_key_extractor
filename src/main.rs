@@ -1,6 +1,10 @@
 extern crate argparse;
 extern crate serde_json;
 
+#[macro_use]
+extern crate lazy_static;
+extern crate regex;
+
 #[cfg(test)]
 #[macro_use]
 extern crate quickcheck;

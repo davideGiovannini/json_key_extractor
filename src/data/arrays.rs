@@ -64,19 +64,6 @@ impl Add for Array {
 }
 
 impl Array {
-    pub fn from(elements: Vec<Case>) -> Array {
-        let mut array: Array = Default::default();
-        for case in elements {
-            match case {
-                Case::Values(vals) => array.values = array.values + vals,
-                Case::Object(obj) => array.object = array.object + obj,
-                Case::Array(arr) => array = array + arr,
-                Case::Null => (),
-            }
-        }
-        array
-    }
-
     pub fn len(&self) -> usize {
         let array_len = if let Some(ref array) = *self.array {
             array.len()
