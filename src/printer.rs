@@ -7,9 +7,7 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
     let mut output = String::new();
 
     match *case {
-        Values(ref vals) => {
-            return format!("{}", vals)
-        }
+        Values(ref vals) => return format!("{}", vals),
 
         Array(ref arr) => {
             if arr.len() == 1 {
@@ -42,36 +40,27 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
             "".to_string()
         }
         Null => return "<null>".to_string(),
-        Multi(ref cases) =>
-            return cases.into_iter()
+        Multi(ref cases) => {
+            return cases
+                       .into_iter()
                        .map(print_type)
                        .fold("|".to_string(), |a, b| format!("{}{}|", a, b))
                        .to_lowercase()
+        }
     };
 
     output
 }
 
 
-fn print_type(case: &Case) -> String{
+fn print_type(case: &Case) -> String {
     use Case::*;
     match *case {
-        Values(ref vals) => {
-            return format!("{}", vals)
-        }
+        Values(ref vals) => return format!("{}", vals),
 
         Array(ref arr) => {
-            if arr.len() == 1 {
-                match arr[0] {
-                    Case::Values(ref t) => return format!("[{}]", t),
-                    Case::Object(ref obj) => {
-                        return format!("[{}]", obj)
-                    }
-                    _ => (),
-                }
-            }
-            return format!("{:#?}", arr);
+            return format!("{}", arr);
         }
-        _ => "type".to_string()
+        _ => "type".to_string(),
     }
 }

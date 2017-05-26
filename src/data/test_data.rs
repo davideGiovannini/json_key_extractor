@@ -9,11 +9,11 @@ use quickcheck::{Arbitrary, Gen, empty_shrinker};
 
 impl Arbitrary for Type {
     fn arbitrary<G: Gen>(g: &mut G) -> Type {
-      let choices = [Type::Boolean, Type::String, Type::Int, Type::Float];
-        *g.choose(&choices ).unwrap()
+        let choices = [Type::Boolean, Type::String, Type::Int, Type::Float];
+        *g.choose(&choices).unwrap()
     }
 
-    fn shrink(&self)  -> Box<Iterator<Item=Type>> {
+    fn shrink(&self) -> Box<Iterator<Item = Type>> {
         empty_shrinker()
     }
 }

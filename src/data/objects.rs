@@ -40,11 +40,11 @@ impl Object {
         Object { dict }
     }
 
-    pub fn keys(&self) -> Keys<String, Case>{
+    pub fn keys(&self) -> Keys<String, Case> {
         self.dict.keys()
     }
 
-    pub fn get(&self, key: &str) -> Option<&Case>{
+    pub fn get(&self, key: &str) -> Option<&Case> {
         self.dict.get(key)
     }
 }

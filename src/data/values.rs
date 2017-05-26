@@ -22,31 +22,31 @@ impl fmt::Display for Type {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Values{
-    data_types: HashSet<Type>
+pub struct Values {
+    data_types: HashSet<Type>,
 }
 
-impl Values{
-    pub fn new(data_type: Type)-> Values{
+impl Values {
+    pub fn new(data_type: Type) -> Values {
         let mut data_types = HashSet::new();
         data_types.insert(data_type);
-        Values{data_types}
+        Values { data_types }
     }
-    pub fn from_values(values: &[Type]) -> Values{
+    pub fn from_values(values: &[Type]) -> Values {
         let mut data_types = HashSet::new();
-        for t in values{
+        for t in values {
             data_types.insert(*t);
         }
-        Values{data_types}
+        Values { data_types }
     }
 }
 
 impl fmt::Display for Values {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 
-        for (i,t) in self.data_types.iter().enumerate(){
+        for (i, t) in self.data_types.iter().enumerate() {
             write!(f, "{}", t)?;
-            if i < self.data_types.len() -1{
+            if i < self.data_types.len() - 1 {
                 write!(f, "|")?;
             }
         }
@@ -58,8 +58,6 @@ impl Add for Values {
     type Output = Values;
 
     fn add(self, other: Values) -> Values {
-        Values{
-            data_types: self.data_types.union(&other.data_types).cloned().collect()
-        }
+        Values { data_types: self.data_types.union(&other.data_types).cloned().collect() }
     }
 }

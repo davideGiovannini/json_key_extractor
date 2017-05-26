@@ -10,13 +10,16 @@ pub use self::values::*;
 mod objects;
 pub use self::objects::*;
 
+mod arrays;
+pub use self::arrays::*;
+
 #[cfg(test)]
 mod test_data;
 
 #[derive(Debug, PartialEq)]
 pub enum Case {
     Values(Values),
-    Array(Vec<Case>),
+    Array(Array),
     Object(Object),
     Null,
     Multi(Vec<Case>),
@@ -31,16 +34,20 @@ impl Case {
         }
     }
 
-    pub fn from_boolean() -> Case{
+    pub fn from_boolean() -> Case {
         Case::Values(Values::new(Type::Boolean))
     }
 
-    pub fn from_string() -> Case{
+    pub fn from_string() -> Case {
         Case::Values(Values::new(Type::String))
     }
 
-    pub fn from_dict(dict: HashMap<String, Case>) -> Case{
+    pub fn from_dict(dict: HashMap<String, Case>) -> Case {
         Case::Object(Object::from(dict))
+    }
+
+    pub fn from_vec(elements: Vec<Case>) -> Case {
+        Case::Array(Array::from(elements))
     }
 }
 
@@ -51,7 +58,7 @@ impl Add for Case {
         use Case::*;
 
         match (self, other) {
-            (Values(vals_a), Values(vals_b)) => Values(vals_a+vals_b),
+            (Values(vals_a), Values(vals_b)) => Values(vals_a + vals_b),
             (Null, smt) | (smt, Null) => smt,
             (Object(obj_a), Object(obj_b)) => Object(obj_a + obj_b),
             (Array(arr), Values(vals)) |
@@ -60,7 +67,7 @@ impl Add for Case {
             (Object(obj), Values(vals)) |
             (Values(vals), Object(obj)) => Multi(vec![Object(obj), Values(vals)]),
 
-            (Array(arr_a), Array(arr_b)) => merge_arrays(arr_a, arr_b),
+            (Array(arr_a), Array(arr_b)) => Case::Array(arr_a + arr_b),
             (Array(arr), Object(obj)) |
             (Object(obj), Array(arr)) => Multi(vec![Object(obj), Array(arr)]),
             (Multi(mut multi_a), Multi(multi_b)) => {
@@ -74,22 +81,4 @@ impl Add for Case {
             }
         }
     }
-}
-
-
-fn merge_arrays(mut arr_a: Vec<Case>, arr_b: Vec<Case>) -> Case {
-    arr_a.extend(arr_b);
-
-    compact_array(arr_a)
-}
-
-
-pub fn compact_array(arr: Vec<Case>) -> Case {
-    use Case::*;
-
-    let arr = match arr.into_iter().fold(Case::Null, Case::add) {
-        Multi(arr) | Array(arr) => arr,
-        smt => vec![smt],
-    };
-    Case::Array(arr)
 }

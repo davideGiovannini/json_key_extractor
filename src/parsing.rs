@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use serde_json::Value;
-use data::{Case, compact_array};
+use data::Case;
 use std::iter::FromIterator;
 
 pub fn process_element(value: Value) -> Case {
@@ -19,7 +19,7 @@ pub fn process_element(value: Value) -> Case {
         Value::Number(number) => Case::from_number(number),
         Value::String(_) => Case::from_string(),
         Value::Array(values) => {
-            compact_array(Vec::from_iter(values.into_iter().map(process_element)))
+            Case::from_vec(Vec::from_iter(values.into_iter().map(process_element)))
         }
     }
 }
