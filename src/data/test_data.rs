@@ -1,7 +1,5 @@
 
 
-use super::Case;
-use super::Case::*;
 use super::Type;
 use super::Values;
 
@@ -20,7 +18,7 @@ impl Arbitrary for Type {
 
 
 quickcheck! {
-      fn prop(type_a: Type, type_b: Type) -> bool {
+      fn add_value_to_value(type_a: Type, type_b: Type) -> bool {
           if type_a == type_b{
             Values::new(type_a) + Values::new(type_b) == Values::new(type_a)
           }else{

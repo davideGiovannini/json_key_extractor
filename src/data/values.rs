@@ -68,7 +68,6 @@ impl Add for Values {
     }
 }
 
-
 impl Default for Values {
     fn default() -> Values {
         Values { data_types: Default::default() }
