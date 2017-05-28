@@ -5,22 +5,21 @@ use data::Object;
 pub fn pretty_print(case: &Case, prefix: &str) -> String {
     use Case::*;
 
-
     match *case {
-        Values(ref vals) => return format!("{}", vals),
+        Values(ref vals) => format!("{}", vals),
 
         Array(ref arr) => {
             if arr.has_object() {
-                return format!("{:>20}\n{}",
-                               "[object]",
-                               pretty_print_object(arr.object(), &format!("[{}]", prefix)));
+                format!("{:>20}\n{}",
+                        "[object]",
+                        pretty_print_object(arr.object(), &format!("[{}]", prefix)))
             } else {
-                return format!("{}", arr);
+                format!("{}", arr)
             }
         }
-        Object(ref obj) => return pretty_print_object(obj, prefix),
-        Null => return "<null>".to_string(),
-    };
+        Object(ref obj) => pretty_print_object(obj, prefix),
+        Null => "<null>".to_string(),
+    }
 }
 
 
