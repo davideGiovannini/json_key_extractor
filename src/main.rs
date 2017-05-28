@@ -34,11 +34,11 @@ fn main() {
     {
         // this block limits scope of borrows by ap.refer() method
         let mut ap = ArgumentParser::new();
-        ap.set_description("Greet somebody.");
+        ap.set_description("Extract structure information from a jsonl file.");
         ap.refer(&mut num_threads)
             .add_option(&["-n", "--nthreads"], Store, "Number of threads");
         ap.refer(&mut input_path)
-            .add_argument("file", StoreOption, "Name for the greeting");
+            .add_argument("file", StoreOption, "File to process, if not provided stdin will be used.");
         ap.parse_args_or_exit();
     }
 
