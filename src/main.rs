@@ -26,7 +26,6 @@ use parsing::process_element;
 mod printer;
 use printer::pretty_print;
 
-use crossbeam::sync::MsQueue;
 
 fn main() {
     let mut num_threads = 1;
@@ -38,7 +37,9 @@ fn main() {
         ap.refer(&mut num_threads)
             .add_option(&["-n", "--nthreads"], Store, "Number of threads");
         ap.refer(&mut input_path)
-            .add_argument("file", StoreOption, "File to process, if not provided stdin will be used.");
+            .add_argument("file",
+                          StoreOption,
+                          "File to process, if not provided stdin will be used.");
         ap.parse_args_or_exit();
     }
 
@@ -54,14 +55,15 @@ fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> String
     where Source: Read
 {
 
-
     let result = if nthreads > 1 {
         #[cfg(debug_assertions)]
         println!("Starting parallel processing [{} threads].", nthreads);
+
         parallel_process_input(input, nthreads)
     } else {
         #[cfg(debug_assertions)]
         println!("Starting processing [single thread].");
+
         process_input(input)
     };
 
@@ -90,17 +92,18 @@ fn process_input<Source: Read + Sized>(input: Source) -> Case
 fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: usize) -> Case
     where Source: Read
 {
-    let input = BufReader::new(input);
-
-    let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());
-
     use std::thread;
     use std::sync::{Arc, RwLock};
     use std::sync::mpsc::channel;
+    use crossbeam::sync::MsQueue;
 
+
+    let input = BufReader::new(input);
+    let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());
     let stop_processing = Arc::new(RwLock::new(false));
     let (tx, rx) = channel();
 
+    // spin up n_threads
     for _ in 0..n_threads {
         let queue = queue.clone();
         let tx = tx.clone();
@@ -121,6 +124,7 @@ fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: usize)
         });
     }
 
+    // Send lines to the threads
     for line in input.lines() {
         let line = line.unwrap();
         queue.push(line.to_string());
