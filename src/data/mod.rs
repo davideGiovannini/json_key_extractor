@@ -21,7 +21,7 @@ mod test_data;
 
 
 // This matches both simple dates like YYYY.MM.DD and timestamp like 2017-05-21T08:48:34.943983
-const DATE_PATTERN: &str = r"^\d{4}.\d{2}.\d{2}(T\d{2}:\d{2}:\d{2}.\d{6})?$";
+const DATE_PATTERN: &str = r"^ *\d{4}.\d{2}.\d{2}(T\d{2}:\d{2}:\d{2}(.\d{6})?)? *$";
 
 #[derive(Debug, PartialEq)]
 pub enum Case {

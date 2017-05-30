@@ -1,7 +1,6 @@
 
 
-use super::Type;
-use super::Values;
+use super::*;
 
 use quickcheck::{Arbitrary, Gen, empty_shrinker};
 
@@ -26,3 +25,58 @@ quickcheck! {
           }
       }
   }
+
+fn date() -> Case{
+  Case::Values(Values::new(Type::Date))
+}
+
+fn string() -> Case{
+  Case::Values(Values::new(Type::String))
+}
+
+#[test]
+fn simple_date() {
+  assert_eq!(Case::from_string("2017-12-10"), date());
+  assert_eq!(Case::from_string("2017/12/10"), date());
+  assert_eq!(Case::from_string("2017_12_10"), date());
+}
+
+#[test]
+fn noisy_date() {
+  assert_eq!(Case::from_string("2017-12-10  "), date());
+  assert_eq!(Case::from_string("   2017-12-10"), date());
+  assert_eq!(Case::from_string("   2017-12-10   "), date());
+}
+
+#[test]
+fn timestamps() {
+  assert_eq!(Case::from_string("2017-05-21T07:36:12.161014"), date());
+  assert_eq!(Case::from_string("2017-05-21T07:36:12"), date())
+}
+
+#[test]
+fn noisy_timestamps() {
+  assert_eq!(Case::from_string("   2017-05-21T07:36:12.161014"), date());
+  assert_eq!(Case::from_string("2017-05-21T07:36:12.161014    "), date());
+  assert_eq!(Case::from_string("     2017-05-21T07:36:12.161014   "), date());
+
+  assert_eq!(Case::from_string("   2017-05-21T07:36:12"), date());
+  assert_eq!(Case::from_string("2017-05-21T07:36:12    "), date());
+  assert_eq!(Case::from_string("   2017-05-21T07:36:12    "), date());
+}
+
+#[test]
+fn string_containing_dates_are_still_strings() {
+    assert_eq!(Case::from_string("2017-05-01 blabla"), string());
+    assert_eq!(Case::from_string("Starting from 2017-05-01"), string());
+    assert_eq!(Case::from_string("Starting from 2017-05-01 blabla"), string());
+    assert_eq!(Case::from_string("bb2017-05-01aaa"), string());
+}
+
+#[test]
+fn wrong_dates_are_string() {
+    assert_eq!(Case::from_string("42017-05-01"), string());
+    assert_eq!(Case::from_string("2017-205-01"), string());
+    assert_eq!(Case::from_string("2017-05-013"), string());
+    assert_eq!(Case::from_string("42017-205-013"), string());
+}
