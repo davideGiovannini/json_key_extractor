@@ -39,6 +39,11 @@ fn simple_date() {
   assert_eq!(Case::from_string("2017-12-10"), date());
   assert_eq!(Case::from_string("2017/12/10"), date());
   assert_eq!(Case::from_string("2017_12_10"), date());
+  assert_eq!(Case::from_string("2017\\12\\10"), date());
+  assert_eq!(Case::from_string("2017.12.10"), date());
+  assert_eq!(Case::from_string("2017+12+10"), date());
+  assert_eq!(Case::from_string("2017:12:10"), date());
+  assert_eq!(Case::from_string("2017 12 10"), date());
 }
 
 #[test]
@@ -79,4 +84,7 @@ fn wrong_dates_are_string() {
     assert_eq!(Case::from_string("2017-205-01"), string());
     assert_eq!(Case::from_string("2017-05-013"), string());
     assert_eq!(Case::from_string("42017-205-013"), string());
+
+    assert_eq!(Case::from_string("2017305213"), string());
+    assert_eq!(Case::from_string("2017f05b01"), string());
 }
