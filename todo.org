@@ -2,3 +2,6 @@
 ** TODO Avoid loading all file in ram (the queue).
   If it contains above N elements wait until they are processed (below N).
 ***  Even better use a command line option to set max ram usage/policy
+
+** TODO try this [spmc](https://docs.rs/spmc/0.2.1/spmc/) instead of crossbeam::MSQUEUE
+** TODO handle italian dates (dd/mm/yyyy)

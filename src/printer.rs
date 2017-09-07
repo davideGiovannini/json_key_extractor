@@ -2,6 +2,7 @@
 use data::Case;
 use data::Object;
 
+
 pub fn pretty_print(case: &Case, prefix: &str) -> String {
     use Case::*;
 
@@ -10,9 +11,11 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
 
         Array(ref arr) => {
             if arr.has_object() {
-                format!("{:>20}\n{}",
-                        "[object]",
-                        pretty_print_object(arr.object(), &format!("[{}]", prefix)))
+                format!(
+                    "{:>20}\n{}",
+                    "[object]",
+                    pretty_print_object(arr.object(), &format!("[{}]", prefix))
+                )
             } else {
                 format!("{}", arr)
             }
@@ -37,7 +40,14 @@ fn pretty_print_object(object: &Object, prefix: &str) -> String {
 
         output.push_str(&format!("{:<60}", next_prefix));
 
-        output.push_str(&format!("{:>20}", pretty_print(object.get(k).unwrap(), &next_prefix)));
+        if let Some(&Case::Object(_)) = object.get(k) {
+            output.push_str(&format!("{:>20}\n", "object"));
+        }
+
+        output.push_str(&format!(
+            "{:>20}",
+            pretty_print(object.get(k).unwrap(), &next_prefix)
+        ));
 
         if i < keys.len() - 1 {
             output.push('\n');
