@@ -1,38 +1,45 @@
-extern crate argparse;
 extern crate json_key_extractor;
 
-use argparse::{ArgumentParser, StoreOption, Store};
+extern crate structopt;
+#[macro_use]
+extern crate structopt_derive;
+
 use std::fs::File;
 use std::io::{Read, stdin};
 
 use json_key_extractor::*;
 
-fn main() {
-    let mut num_threads = 1;
-    let mut input_path: Option<String> = None;
-    {
-        // this block limits scope of borrows by ap.refer() method
-        let mut ap = ArgumentParser::new();
-        ap.set_description("Extract structure information from a jsonl file.");
-        ap.refer(&mut num_threads)
-            .add_option(&["-n", "--nthreads"], Store, "Number of threads");
-        ap.refer(&mut input_path)
-            .add_argument("file",
-                          StoreOption,
-                          "File to process, if not provided stdin will be used.");
-        ap.parse_args_or_exit();
-    }
+use structopt::StructOpt;
 
-    let result = if input_path.is_none() {
-        process(stdin(), num_threads)
+/// Extract structure information from a jsonl file.
+#[derive(StructOpt, Debug)]
+#[structopt()]
+struct Args {
+    /// Number of threads
+    #[structopt(short = "n", long = "nthreads", default_value = "1")]
+    num_threads: usize,
+
+    /// File to process, if not provided stdin will be used.
+    #[structopt()]
+    input_path: Option<String>,
+}
+
+
+fn main() {
+    let args = Args::from_args();
+
+    let result = if let Some(input_path) = args.input_path {
+        process(File::open(input_path).unwrap(), args.num_threads)
     } else {
-        process(File::open(input_path.unwrap()).unwrap(), num_threads)
+        process(stdin(), args.num_threads)
     };
+
     println!("{}", result);
 }
 
 fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> String
-    where Source: Read
+where
+    Source: Read,
 {
     let result = if nthreads > 1 {
         #[cfg(debug_assertions)]

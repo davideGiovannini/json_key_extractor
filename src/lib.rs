@@ -25,7 +25,8 @@ pub use printer::pretty_print;
 
 
 pub fn process_input<Source: Read + Sized>(input: Source) -> Case
-    where Source: Read
+where
+    Source: Read,
 {
     let input = BufReader::new(input);
 
@@ -41,7 +42,8 @@ pub fn process_input<Source: Read + Sized>(input: Source) -> Case
 }
 
 pub fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: usize) -> Case
-    where Source: Read
+where
+    Source: Read,
 {
     use std::thread;
     use std::sync::{Arc, RwLock};
@@ -56,9 +58,9 @@ pub fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: us
 
     // spin up n_threads
     for _ in 0..n_threads {
-        let queue = queue.clone();
+        let queue = Arc::clone(&queue);
         let tx = tx.clone();
-        let stop_processing = stop_processing.clone();
+        let stop_processing = Arc::clone(&stop_processing);
 
         thread::spawn(move || {
             let mut case = Case::Null;

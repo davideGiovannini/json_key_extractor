@@ -84,7 +84,8 @@ impl Array {
 
 impl FromIterator<Case> for Array {
     fn from_iter<T>(iter: T) -> Self
-        where T: IntoIterator<Item = Case>
+    where
+        T: IntoIterator<Item = Case>,
     {
         let mut array: Array = Default::default();
         for case in iter {

@@ -21,7 +21,8 @@ mod test_data;
 
 
 // This matches both simple dates like YYYY.MM.DD and timestamp like 2017-05-21T08:48:34.943983
-const DATE_PATTERN: &str = r"^ *\d{4}[-_\\/.:+ ]\d{2}[-_\\/.:+ ]\d{2}(T\d{2}:\d{2}:\d{2}(.\d{6})?)? *$";
+const DATE_PATTERN: &str =
+    r"^ *\d{4}[-_\\/.:+ ]\d{2}[-_\\/.:+ ]\d{2}(T\d{2}:\d{2}:\d{2}(.\d{6})?)? *$";
 
 #[derive(Debug, PartialEq)]
 pub enum Case {
@@ -32,7 +33,7 @@ pub enum Case {
 }
 
 impl Case {
-    pub fn from_number(number: Number) -> Case {
+    pub fn from_number(number: &Number) -> Case {
         if number.is_f64() {
             Case::Values(Values::new(Type::Float))
         } else {
@@ -64,7 +65,8 @@ impl Case {
 
 impl FromIterator<Case> for Case {
     fn from_iter<T>(iter: T) -> Self
-        where T: IntoIterator<Item = Case>
+    where
+        T: IntoIterator<Item = Case>,
     {
         Case::Array(Array::from_iter(iter))
     }
