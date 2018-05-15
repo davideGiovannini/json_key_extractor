@@ -1,7 +1,5 @@
-
 use data::Case;
 use data::Object;
-
 
 pub fn pretty_print(case: &Case, prefix: &str) -> String {
     use Case::*;
@@ -24,7 +22,6 @@ pub fn pretty_print(case: &Case, prefix: &str) -> String {
         Null => "<null>".to_string(),
     }
 }
-
 
 fn pretty_print_object(object: &Object, prefix: &str) -> String {
     let mut output = String::new();

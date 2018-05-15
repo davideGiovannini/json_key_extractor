@@ -12,7 +12,9 @@ pub struct Object {
 
 impl Default for Object {
     fn default() -> Self {
-        Object { dict: Default::default() }
+        Object {
+            dict: Default::default(),
+        }
     }
 }
 
@@ -37,7 +39,6 @@ impl Add for Object {
         Object { dict: self.dict }
     }
 }
-
 
 impl Object {
     pub fn from(dict: HashMap<String, Case>) -> Object {

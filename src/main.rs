@@ -5,7 +5,7 @@ extern crate structopt;
 extern crate structopt_derive;
 
 use std::fs::File;
-use std::io::{Read, stdin};
+use std::io::{stdin, Read};
 
 use json_key_extractor::*;
 
@@ -23,7 +23,6 @@ struct Args {
     #[structopt()]
     input_path: Option<String>,
 }
-
 
 fn main() {
     let args = Args::from_args();

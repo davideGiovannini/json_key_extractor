@@ -1,4 +1,3 @@
-
 use serde_json::Number;
 use std::collections::HashMap;
 
@@ -18,7 +17,6 @@ pub use self::arrays::*;
 
 #[cfg(test)]
 mod test_data;
-
 
 // This matches both simple dates like YYYY.MM.DD and timestamp like 2017-05-21T08:48:34.943983
 const DATE_PATTERN: &str =
@@ -87,14 +85,17 @@ impl Add for Case {
 
             (Array(arr_a), Array(arr_b)) => Case::Array(arr_a + arr_b),
 
-            (Array(arr), Object(obj)) |
-            (Object(obj), Array(arr)) => Case::from_iter(vec![Object(obj), Array(arr)]),
+            (Array(arr), Object(obj)) | (Object(obj), Array(arr)) => {
+                Case::from_iter(vec![Object(obj), Array(arr)])
+            }
 
-            (Object(obj), Values(vals)) |
-            (Values(vals), Object(obj)) => Case::from_iter(vec![Object(obj), Values(vals)]),
+            (Object(obj), Values(vals)) | (Values(vals), Object(obj)) => {
+                Case::from_iter(vec![Object(obj), Values(vals)])
+            }
 
-            (Array(arr), Values(vals)) |
-            (Values(vals), Array(arr)) => Case::from_iter(vec![Array(arr), Values(vals)]),
+            (Array(arr), Values(vals)) | (Values(vals), Array(arr)) => {
+                Case::from_iter(vec![Array(arr), Values(vals)])
+            }
         }
     }
 }

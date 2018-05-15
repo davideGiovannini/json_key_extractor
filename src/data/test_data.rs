@@ -1,8 +1,6 @@
-
-
 use super::*;
 
-use quickcheck::{Arbitrary, Gen, empty_shrinker};
+use quickcheck::{empty_shrinker, Arbitrary, Gen};
 
 impl Arbitrary for Type {
     fn arbitrary<G: Gen>(g: &mut G) -> Type {
@@ -15,16 +13,15 @@ impl Arbitrary for Type {
     }
 }
 
-
 quickcheck! {
-      fn add_value_to_value(type_a: Type, type_b: Type) -> bool {
-          if type_a == type_b{
-            Values::new(type_a) + Values::new(type_b) == Values::new(type_a)
-          }else{
-            Values::new(type_a) + Values::new(type_b) == Values::from_values(&[type_a, type_b])
-          }
-      }
-  }
+    fn add_value_to_value(type_a: Type, type_b: Type) -> bool {
+        if type_a == type_b{
+          Values::new(type_a) + Values::new(type_b) == Values::new(type_a)
+        }else{
+          Values::new(type_a) + Values::new(type_b) == Values::from_values(&[type_a, type_b])
+        }
+    }
+}
 
 fn date() -> Case {
     Case::Values(Values::new(Type::Date))

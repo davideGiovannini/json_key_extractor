@@ -6,9 +6,6 @@ extern crate quickcheck;
 
 use json_key_extractor::process_element;
 
-
-
-
 quickcheck! {
     fn int_values(first: i32, second: i32) -> bool {
         let first = serde_json::from_str(&format!("{}", first)).unwrap();
@@ -28,27 +25,25 @@ quickcheck! {
     }
 }
 
-
-
 #[test]
 fn it_works() {
-
-    let input_1 = serde_json::from_str(r#"
+    let input_1 = serde_json::from_str(
+        r#"
 {
     "key1": 2,
     "array": [2.0, 1.0]
 }
-"#)
-            .unwrap();
+"#,
+    ).unwrap();
 
-    let input_2 = serde_json::from_str(r#"
+    let input_2 = serde_json::from_str(
+        r#"
 {
     "array": [1.0, 40.1],
     "key1": 45
 }
-"#)
-            .unwrap();
+"#,
+    ).unwrap();
 
     assert_eq!(process_element(input_1), process_element(input_2));
 }
-

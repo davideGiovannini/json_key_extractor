@@ -1,9 +1,9 @@
 extern crate serde_json;
 
+extern crate crossbeam;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
-extern crate crossbeam;
 
 #[cfg(test)]
 #[macro_use]
@@ -22,7 +22,6 @@ pub use parsing::process_element;
 
 mod printer;
 pub use printer::pretty_print;
-
 
 pub fn process_input<Source: Read + Sized>(input: Source) -> Case
 where
@@ -49,7 +48,6 @@ where
     use std::sync::{Arc, RwLock};
     use std::sync::mpsc::channel;
     use crossbeam::sync::MsQueue;
-
 
     let input = BufReader::new(input);
     let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());

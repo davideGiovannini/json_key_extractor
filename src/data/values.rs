@@ -49,7 +49,6 @@ impl Values {
 
 impl fmt::Display for Values {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-
         for (i, t) in self.data_types.iter().enumerate() {
             write!(f, "{}", t)?;
             if i < self.data_types.len() - 1 {
@@ -64,12 +63,16 @@ impl Add for Values {
     type Output = Values;
 
     fn add(self, other: Values) -> Values {
-        Values { data_types: self.data_types.union(&other.data_types).cloned().collect() }
+        Values {
+            data_types: self.data_types.union(&other.data_types).cloned().collect(),
+        }
     }
 }
 
 impl Default for Values {
     fn default() -> Values {
-        Values { data_types: Default::default() }
+        Values {
+            data_types: Default::default(),
+        }
     }
 }
