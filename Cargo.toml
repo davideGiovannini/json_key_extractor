@@ -5,11 +5,11 @@ authors = ["Davide Giovannini <giovannini.davide90@gmail.com>"]
 
 [dependencies]
 serde_json = "1.0"
-lazy_static = "0.2.8"
-regex = "0.2"
-crossbeam = "0.2"
-structopt = "0.1.0"
-structopt-derive = "0.1.0"
+lazy_static = "1.0"
+regex = "1.0"
+crossbeam = "0.3"
+structopt = "0.2.8"
+structopt-derive = "0.2.8"
 
 [dev-dependencies]
-quickcheck = "0.3"
+quickcheck = "0.6"

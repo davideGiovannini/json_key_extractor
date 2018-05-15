@@ -13,7 +13,7 @@ use structopt::StructOpt;
 
 /// Extract structure information from a jsonl file.
 #[derive(StructOpt, Debug)]
-#[structopt()]
+#[structopt(raw(setting = "structopt::clap::AppSettings::ColoredHelp"))]
 struct Args {
     /// Number of threads
     #[structopt(short = "n", long = "nthreads", default_value = "1")]
