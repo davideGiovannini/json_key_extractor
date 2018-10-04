@@ -16,6 +16,10 @@ run-build:
   artifacts:
     paths:
     - target/release/json_key_extractor
+  cache:
+    paths:
+    - target/
+    - cargo/
 
 variables:
   CARGO_HOME: $CI_PROJECT_DIR/cargo
