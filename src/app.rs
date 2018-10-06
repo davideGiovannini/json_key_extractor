@@ -20,6 +20,8 @@ pub struct Args {
     #[structopt(short = "t", long = "type", default_value = "terminal")]
     pub format: Printer,
 
+    /// When to use colors.
+    /// Can be one of (never, always, auto)
     #[structopt(short = "c", long = "color", default_value = "auto")]
     pub color: ColorOption,
 
