@@ -1,5 +1,5 @@
 use serde_json::Number;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use std::iter::FromIterator;
 use std::ops::Add;
@@ -22,7 +22,7 @@ mod test_data;
 const DATE_PATTERN: &str =
     r"^ *\d{4}[-_\\/.:+ ]\d{2}[-_\\/.:+ ]\d{2}(T\d{2}:\d{2}:\d{2}(.\d{6})?)? *$";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Case {
     Values(Values),
     Array(Array),
@@ -56,8 +56,24 @@ impl Case {
         Case::Values(Values::new(data_type))
     }
 
-    pub fn from_dict(dict: HashMap<String, Case>) -> Case {
+    pub fn from_dict(dict: BTreeMap<String, Case>) -> Case {
         Case::Object(Object::from(dict))
+    }
+
+    pub fn is_object(&self) -> bool {
+        if let Case::Object(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn is_array(&self) -> bool {
+        if let Case::Array(_) = self {
+            true
+        } else {
+            false
+        }
     }
 }
 

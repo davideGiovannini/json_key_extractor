@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use serde_json::Value;
 use data::Case;
 use std::iter::FromIterator;
@@ -6,7 +6,7 @@ use std::iter::FromIterator;
 pub fn process_element(value: Value) -> Case {
     match value {
         Value::Object(map) => {
-            let mut object_map: HashMap<String, Case> = Default::default();
+            let mut object_map: BTreeMap<String, Case> = Default::default();
 
             for (key, value) in map {
                 let children = process_element(value);
