@@ -20,3 +20,4 @@ atty = "0.2.11"
 
 [dev-dependencies]
 quickcheck = "0.7"
+rand = "0.5"

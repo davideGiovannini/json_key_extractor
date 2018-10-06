@@ -13,6 +13,8 @@ extern crate prettytable;
 #[cfg(test)]
 #[macro_use]
 extern crate quickcheck;
+#[cfg(test)]
+extern crate rand;
 
 extern crate structopt;
 #[macro_use]

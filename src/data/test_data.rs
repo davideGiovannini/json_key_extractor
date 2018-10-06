@@ -1,6 +1,7 @@
 use super::*;
 
 use quickcheck::{empty_shrinker, Arbitrary, Gen};
+use rand::Rng;
 
 impl Arbitrary for Type {
     fn arbitrary<G: Gen>(g: &mut G) -> Type {
