@@ -1,13 +1,13 @@
-use std::collections::HashMap;
-use std::collections::hash_map::Keys;
+use std::collections::BTreeMap;
+use std::collections::btree_map;
 use std::fmt;
 use std::ops::Add;
 
 use super::Case;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Object {
-    dict: HashMap<String, Case>,
+    dict: BTreeMap<String, Case>,
 }
 
 impl Default for Object {
@@ -41,12 +41,16 @@ impl Add for Object {
 }
 
 impl Object {
-    pub fn from(dict: HashMap<String, Case>) -> Object {
+    pub fn from(dict: BTreeMap<String, Case>) -> Object {
         Object { dict }
     }
 
-    pub fn keys(&self) -> Keys<String, Case> {
+    pub fn keys(&self) -> btree_map::Keys<String, Case> {
         self.dict.keys()
+    }
+
+    pub fn values(&self) -> btree_map::Iter<String, Case> {
+        self.dict.iter()
     }
 
     pub fn get(&self, key: &str) -> Option<&Case> {

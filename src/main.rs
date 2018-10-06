@@ -1,33 +1,26 @@
 extern crate json_key_extractor;
 
-extern crate structopt;
-#[macro_use]
-extern crate structopt_derive;
-
 extern crate num_cpus;
+extern crate structopt;
+use structopt::StructOpt;
 
 use std::fs::File;
-use std::io::{stdin, Read};
+use std::io::{stdin, Read, Result};
 
 use json_key_extractor::*;
 
-use structopt::StructOpt;
-
-/// Extract structure information from a jsonl file.
-#[derive(StructOpt, Debug)]
-#[structopt(raw(setting = "structopt::clap::AppSettings::ColoredHelp"))]
-struct Args {
-    /// Number of threads (defaults to the number of logical thread available)
-    #[structopt(short = "n", long = "nthreads")]
-    num_threads: Option<usize>,
-
-    /// File to process, if not provided stdin will be used.
-    #[structopt()]
-    input_path: Option<String>,
+#[cfg(debug_assertions)]
+fn debug(message: &str, enabled: bool) {
+    if enabled {
+        println!("{}", message)
+    }
 }
 
-fn main() {
+fn main() -> Result<()> {
     let args = Args::from_args();
+
+    #[cfg(debug_assertions)]
+    debug(&format!("{:#?}", args), args.debug);
 
     let num_threads = args.num_threads.unwrap_or_else(num_cpus::get);
 
@@ -37,14 +30,24 @@ fn main() {
         process(stdin(), num_threads)
     };
 
-    println!("{}", result);
+    #[cfg(debug_assertions)]
+    println!("Beginning printing phase");
+
+    match args.format {
+        Printer::Scala => {
+            ScalaPrinter::new(args.color).write(&mut std::io::stdout(), &result, args.color)
+        }
+        Printer::Terminal => {
+            TerminalPrinter::default().write(&mut std::io::stdout(), &result, args.color)
+        }
+    }
 }
 
-fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> String
+fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> Case
 where
     Source: Read,
 {
-    let result = if nthreads > 1 {
+    if nthreads > 1 {
         #[cfg(debug_assertions)]
         println!("Starting parallel processing [{} threads].", nthreads);
 
@@ -54,10 +57,5 @@ where
         println!("Starting processing [single thread].");
 
         process_input(input)
-    };
-
-    #[cfg(debug_assertions)]
-    println!("Beginning printing phase");
-
-    pretty_print(&result, "")
+    }
 }
