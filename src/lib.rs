@@ -2,6 +2,7 @@ extern crate serde_json;
 
 extern crate ansi_term;
 extern crate crossbeam;
+
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;

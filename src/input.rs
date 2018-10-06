@@ -31,7 +31,7 @@ where
     use std::thread;
     use std::sync::{Arc, RwLock};
     use std::sync::mpsc::channel;
-    use crossbeam::sync::MsQueue;
+    use crossbeam::queue::MsQueue;
 
     let input = BufReader::new(input);
     let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());

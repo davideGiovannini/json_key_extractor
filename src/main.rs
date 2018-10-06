@@ -31,11 +31,8 @@ fn main() -> Result<()> {
             Err(err) => {
                 eprintln!("Error while reading '{}': {}", &input_path, err.to_string());
                 ::std::process::exit(2)
-            },
+            }
         }
-
-
-
     } else {
         process(stdin(), num_threads)
     };
