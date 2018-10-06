@@ -25,7 +25,17 @@ fn main() -> Result<()> {
     let num_threads = args.num_threads.unwrap_or_else(num_cpus::get);
 
     let result = if let Some(input_path) = args.input_path {
-        process(File::open(input_path).unwrap(), num_threads)
+        let file = File::open(&input_path);
+        match file {
+            Ok(file) => process(file, num_threads),
+            Err(err) => {
+                eprintln!("Error while reading '{}': {}", &input_path, err.to_string());
+                ::std::process::exit(2)
+            },
+        }
+
+
+
     } else {
         process(stdin(), num_threads)
     };
