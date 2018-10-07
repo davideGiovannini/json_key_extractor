@@ -51,12 +51,12 @@ impl ScalaPrinter {
                 Case::Null => {}
                 Case::Values(ref values) => {
                     if values.len() == 1 {
-                        let val = values.iter().next().unwrap();
+                        let val = values.get_value().unwrap();
                         class.fields.insert(
                             key.clone(),
                             self.style
                                 .types
-                                .paint(title_case(&to_scala_type(*val)))
+                                .paint(title_case(&to_scala_type(val)))
                                 .to_string(),
                         );
                     }
@@ -65,7 +65,7 @@ impl ScalaPrinter {
                     // TODO try to handle mixed cases
                     if let Some(values) = array.values() {
                         if values.len() == 1 {
-                            let val = values.iter().next().unwrap();
+                            let val = values.get_value().unwrap();
 
                             class.fields.insert(
                                 key.clone(),
@@ -75,7 +75,7 @@ impl ScalaPrinter {
                                     self.style
                                         .types
                                         .italic()
-                                        .paint(title_case(&to_scala_type(*val)))
+                                        .paint(title_case(&to_scala_type(val)))
                                 ),
                             );
                         }

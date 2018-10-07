@@ -97,6 +97,7 @@ impl TerminalPrinter {
         match case {
             Case::Null => style.paint("null").to_string(),
             Case::Values(ref values) => values
+                .to_vec()
                 .iter()
                 .map(|x| style.paint(x.to_str()).to_string())
                 .collect::<Vec<String>>()
