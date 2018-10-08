@@ -58,18 +58,18 @@ impl Values {
 
     #[cfg(test)]
     pub fn from_values(values: &[Type]) -> Values {
-        let mut values = Values::default();
+        let mut res_values = Values::default();
 
         for data_type in values {
             match data_type {
-                Type::Boolean => values.bool = Some(data_type),
-                Type::Date => values.date = Some(data_type),
-                Type::Float => values.float = Some(data_type),
-                Type::Int => values.int = Some(data_type),
-                Type::String => values.string = Some(data_type),
+                Type::Boolean => res_values.bool = Some(*data_type),
+                Type::Date => res_values.date = Some(*data_type),
+                Type::Float => res_values.float = Some(*data_type),
+                Type::Int => res_values.int = Some(*data_type),
+                Type::String => res_values.string = Some(*data_type),
             }
         }
-        values
+        res_values
     }
 
     pub fn len(&self) -> usize {
@@ -93,7 +93,7 @@ impl Values {
     }
 
     pub fn to_vec(&self) -> Vec<Type> {
-        [self.bool, self.string, self.int, self.float, self.date]
+        [self.bool, self.date, self.float, self.int, self.string]
             .iter()
             .cloned()
             .flatten()
