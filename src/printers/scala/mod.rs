@@ -1,10 +1,13 @@
 use super::CasePrinter;
+use crate::data::{Case, Object};
 use std::io::{Result, Write};
-use data::{Case, Object};
 
-use ansi_term::{Colour::{Green, Yellow}, Style};
+use ansi_term::{
+    Colour::{Green, Yellow},
+    Style,
+};
 
-use app::ColorOption;
+use crate::app::ColorOption;
 
 mod class;
 use self::class::*;

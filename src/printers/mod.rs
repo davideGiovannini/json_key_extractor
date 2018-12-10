@@ -1,4 +1,4 @@
-use data::Case;
+use crate::data::Case;
 
 use std::{io, io::Write};
 
@@ -9,7 +9,7 @@ mod scala;
 pub use self::scala::*;
 use std::str::FromStr;
 
-use app::ColorOption;
+use crate::app::ColorOption;
 
 pub trait CasePrinter {
     fn write<W>(

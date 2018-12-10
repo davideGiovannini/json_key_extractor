@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
+use crate::data::Case;
 use serde_json::Value;
-use data::Case;
+use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
 pub fn process_element(value: Value) -> Case {

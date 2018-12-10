@@ -1,6 +1,6 @@
 use super::*;
 
-use quickcheck::{empty_shrinker, Arbitrary, Gen};
+use quickcheck::{empty_shrinker, quickcheck, Arbitrary, Gen};
 use rand::Rng;
 
 impl Arbitrary for Type {

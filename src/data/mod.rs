@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::ops::Add;
 
+use lazy_static::lazy_static;
 use regex;
 
 mod values;
@@ -45,8 +46,7 @@ impl Case {
 
     pub fn from_string(string: &str) -> Case {
         lazy_static! {
-            static ref DATE_REGEXP: regex::Regex =
-                    regex::Regex::new(DATE_PATTERN).unwrap();
+            static ref DATE_REGEXP: regex::Regex = regex::Regex::new(DATE_PATTERN).unwrap();
         }
         let data_type = if DATE_REGEXP.is_match(string) {
             Type::Date
@@ -90,7 +90,7 @@ impl Add for Case {
     type Output = Case;
 
     fn add(self, other: Case) -> Case {
-        use Case::*;
+        use crate::Case::*;
 
         match (self, other) {
             (Null, smt) | (smt, Null) => smt,

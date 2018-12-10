@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
-use data::Type;
-use std::io::{Result, Write};
 use super::ScalaStyle;
+use crate::data::Type;
+use std::io::{Result, Write};
 
 #[derive(Default, Debug)]
 pub struct ScalaClass {
@@ -17,7 +17,8 @@ impl ScalaClass {
     {
         writeln!(writer, "case class {}(", self.name)?;
 
-        let fields = self.fields
+        let fields = self
+            .fields
             .iter()
             .map(|(n, f)| format!("    {}: {}", style.keyword.paint(n), f))
             .collect::<Vec<String>>()
@@ -34,5 +35,6 @@ pub fn to_scala_type(typ: Type) -> String {
         Type::Float => "Float",
         Type::Int => "Int",
         Type::String => "String",
-    }.to_string()
+    }
+    .to_string()
 }

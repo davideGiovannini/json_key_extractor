@@ -1,5 +1,5 @@
-use std::collections::BTreeMap;
 use std::collections::btree_map;
+use std::collections::BTreeMap;
 use std::fmt;
 use std::ops::Add;
 

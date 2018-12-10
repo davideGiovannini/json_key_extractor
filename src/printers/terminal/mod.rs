@@ -1,11 +1,14 @@
-use data::Case;
 use super::CasePrinter;
+use crate::data::Case;
 use std::io::{Result, Write};
 
-use ansi_term::{Colour::{Green, Yellow}, Style};
-use prettytable::{format, Table};
+use ansi_term::{
+    Colour::{Green, Yellow},
+    Style,
+};
+use prettytable::{cell, format, row, Table};
 
-use app::ColorOption;
+use crate::app::ColorOption;
 
 #[cfg(test)]
 mod test;
@@ -57,39 +60,41 @@ impl TerminalPrinter {
                 let case_type = TerminalPrinter::type_from_case(case, &style.types);
                 table.add_row(row![case_type]);
             }
-            Case::Object(ref object) => for (key, case) in object.values() {
-                let mut new_prefixes = prefixes.clone();
-                new_prefixes.push(key);
+            Case::Object(ref object) => {
+                for (key, case) in object.values() {
+                    let mut new_prefixes = prefixes.clone();
+                    new_prefixes.push(key);
 
-                let case_type = TerminalPrinter::type_from_case(case, &style.types);
+                    let case_type = TerminalPrinter::type_from_case(case, &style.types);
 
-                table.add_row(row![
-                    new_prefixes
-                        .iter()
-                        .map(|k| style.keyword.paint(*k).to_string())
-                        .collect::<Vec<String>>()
-                        .join("."),
-                    case_type
-                ]);
+                    table.add_row(row![
+                        new_prefixes
+                            .iter()
+                            .map(|k| style.keyword.paint(*k).to_string())
+                            .collect::<Vec<String>>()
+                            .join("."),
+                        case_type
+                    ]);
 
-                match case {
-                    Case::Object(_) => {
-                        TerminalPrinter::process_case(table, case, style, &mut new_prefixes)
-                    }
-                    Case::Array(ref arr) => {
-                        if let Some(obj) = arr.object() {
-                            new_prefixes.push("[]");
-                            TerminalPrinter::process_case(
-                                table,
-                                &Case::Object(obj.clone()),
-                                style,
-                                &mut new_prefixes,
-                            )
+                    match case {
+                        Case::Object(_) => {
+                            TerminalPrinter::process_case(table, case, style, &mut new_prefixes)
                         }
-                    }
-                    _ => {}
-                };
-            },
+                        Case::Array(ref arr) => {
+                            if let Some(obj) = arr.object() {
+                                new_prefixes.push("[]");
+                                TerminalPrinter::process_case(
+                                    table,
+                                    &Case::Object(obj.clone()),
+                                    style,
+                                    &mut new_prefixes,
+                                )
+                            }
+                        }
+                        _ => {}
+                    };
+                }
+            }
         };
     }
 

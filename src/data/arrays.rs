@@ -1,5 +1,5 @@
-use std::ops::Add;
 use std::iter::FromIterator;
+use std::ops::Add;
 
 use super::Case;
 use super::{Object, Values};

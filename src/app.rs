@@ -1,8 +1,8 @@
 extern crate structopt;
 
-use printers::Printer;
-use std::str::FromStr;
+use crate::printers::Printer;
 use atty;
+use std::str::FromStr;
 
 /// Extract structure information from a jsonl file.
 #[derive(StructOpt, Debug)]

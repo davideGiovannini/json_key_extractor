@@ -34,7 +34,8 @@ fn it_works() {
     "array": [2.0, 1.0]
 }
 "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     let input_2 = serde_json::from_str(
         r#"
@@ -43,7 +44,8 @@ fn it_works() {
     "key1": 45
 }
 "#,
-    ).unwrap();
+    )
+    .unwrap();
 
     assert_eq!(process_element(input_1), process_element(input_2));
 }

@@ -1,12 +1,13 @@
 mod test_terminal_printer {
-    use Case;
-    use TerminalPrinter;
+    use crate::Case;
+    use crate::TerminalPrinter;
+    use prettytable::{cell, row};
 
     use serde_json::Number;
 
-    use printers::CasePrinter;
+    use crate::printers::CasePrinter;
 
-    use app::ColorOption;
+    use crate::app::ColorOption;
 
     fn colored_string(string: &str) -> String {
         let mut table = TerminalPrinter::setup_prettytable();
@@ -78,7 +79,10 @@ mod test_terminal_printer {
 
         let string_date = string_case.clone() + date_case.clone();
         let int_float_bool = int_case.clone() + float_case.clone() + bool_case.clone();
-        let all = string_case.clone() + date_case.clone() + bool_case.clone() + int_case.clone()
+        let all = string_case.clone()
+            + date_case.clone()
+            + bool_case.clone()
+            + int_case.clone()
             + float_case.clone();
 
         let all_res = colored_string(&vec!["bool", "date", "float", "int", "string"].join(" | "));

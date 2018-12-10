@@ -1,11 +1,11 @@
 use serde_json;
 use serde_json::Value;
-use std::io::BufReader;
 use std::io::BufRead;
+use std::io::BufReader;
 use std::io::Read;
 
-pub use data::Case;
-pub use parsing::process_element;
+pub use crate::data::Case;
+pub use crate::parsing::process_element;
 
 pub fn process_input<Source: Read + Sized>(input: Source) -> Case
 where
@@ -28,10 +28,10 @@ pub fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: us
 where
     Source: Read,
 {
-    use std::thread;
-    use std::sync::{Arc, RwLock};
-    use std::sync::mpsc::channel;
     use crossbeam::queue::MsQueue;
+    use std::sync::mpsc::channel;
+    use std::sync::{Arc, RwLock};
+    use std::thread;
 
     let input = BufReader::new(input);
     let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());
