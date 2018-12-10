@@ -1,12 +1,12 @@
 use super::*;
 
 use quickcheck::{empty_shrinker, quickcheck, Arbitrary, Gen};
-use rand::Rng;
+use rand::seq::SliceRandom;
 
 impl Arbitrary for Type {
     fn arbitrary<G: Gen>(g: &mut G) -> Type {
         let choices = [Type::Boolean, Type::String, Type::Int, Type::Float];
-        *g.choose(&choices).unwrap()
+        *choices.choose(g).unwrap()
     }
 
     fn shrink(&self) -> Box<Iterator<Item = Type>> {

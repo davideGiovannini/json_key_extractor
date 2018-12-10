@@ -1,5 +1,3 @@
-extern crate structopt;
-
 use crate::printers::Printer;
 use atty;
 use std::str::FromStr;

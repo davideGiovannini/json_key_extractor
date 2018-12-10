@@ -1,7 +1,3 @@
-extern crate json_key_extractor;
-
-extern crate num_cpus;
-extern crate structopt;
 use structopt::StructOpt;
 
 use std::fs::File;

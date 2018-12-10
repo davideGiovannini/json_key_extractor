@@ -1,10 +1,5 @@
-extern crate json_key_extractor;
-extern crate serde_json;
-
-#[macro_use]
-extern crate quickcheck;
-
 use json_key_extractor::process_element;
+use quickcheck::quickcheck;
 
 quickcheck! {
     fn int_values(first: i32, second: i32) -> bool {
