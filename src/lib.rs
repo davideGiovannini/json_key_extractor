@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate structopt_derive;
-
 mod data;
 pub use crate::data::Case;
 

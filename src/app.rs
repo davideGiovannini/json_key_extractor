@@ -1,6 +1,7 @@
 use crate::printers::Printer;
 use atty;
 use std::str::FromStr;
+use structopt::StructOpt;
 
 /// Extract structure information from a jsonl file.
 #[derive(StructOpt, Debug)]
