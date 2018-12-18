@@ -1,10 +1,13 @@
 
 ## Build
 
-Make sure to have rustc and cargo installed (see [rustup](https://rustup.rs/))
-Run `cargo build --release` from the project folder to build
-Run `cargo run --release -- <arguments>` from the project folder to run the command with `arguments`
-Run `cargo install` to install the final binary to `~/.cargo/bin`
+Make sure to have rustc and cargo installed (see [rustup](https:/./rustup.rs/)).
+
+Run `cargo build --release` from the project folder to build.
+
+Run `cargo run --release -- <arguments>` from the project folder to run the command with `arguments`.
+
+Run `cargo install` to install the final binary to `~/.cargo/bin`.
 
 ## Usage
 ```
