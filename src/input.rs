@@ -28,13 +28,13 @@ pub fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: us
 where
     Source: Read,
 {
-    use crossbeam::queue::MsQueue;
+    use crossbeam::queue::SegQueue;
     use std::sync::mpsc::channel;
     use std::sync::{Arc, RwLock};
     use std::thread;
 
     let input = BufReader::new(input);
-    let queue: Arc<MsQueue<String>> = Arc::new(MsQueue::new());
+    let queue: Arc<SegQueue<String>> = Arc::new(SegQueue::new());
     let stop_processing = Arc::new(RwLock::new(false));
     let (tx, rx) = channel();
 
@@ -47,7 +47,7 @@ where
         thread::spawn(move || {
             let mut case = Case::Null;
             loop {
-                if let Some(line) = queue.try_pop() {
+                if let Some(line) = queue.pop().ok() {
                     let v: Value = serde_json::from_str(&line).unwrap();
                     let new_case = process_element(v);
                     case = case + new_case;
