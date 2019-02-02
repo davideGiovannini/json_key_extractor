@@ -1,22 +1,22 @@
 use structopt::StructOpt;
 
+use log::{debug, error, info};
 use std::fs::File;
 use std::io::{stdin, Read, Result};
 
 use json_key_extractor::*;
 
-#[cfg(debug_assertions)]
-fn debug(message: &str, enabled: bool) {
-    if enabled {
-        println!("{}", message)
-    }
-}
-
 fn main() -> Result<()> {
+    human_panic::setup_panic!();
+
+    env_logger::Builder::new()
+        .filter_level(log::LevelFilter::Debug)
+        .default_format_timestamp(false)
+        .init();
+
     let args = Args::from_args();
 
-    #[cfg(debug_assertions)]
-    debug(&format!("{:#?}", args), args.debug);
+    debug!("{:#?}", args);
 
     let num_threads = args.num_threads.unwrap_or_else(num_cpus::get);
 
@@ -25,7 +25,7 @@ fn main() -> Result<()> {
         match file {
             Ok(file) => process(file, num_threads),
             Err(err) => {
-                eprintln!("Error while reading '{}': {}", &input_path, err.to_string());
+                error!("Error while reading '{}': {}", &input_path, err.to_string());
                 ::std::process::exit(2)
             }
         }
@@ -33,8 +33,7 @@ fn main() -> Result<()> {
         process(stdin(), num_threads)
     };
 
-    #[cfg(debug_assertions)]
-    println!("Beginning printing phase");
+    debug!("Beginning printing phase");
 
     match args.format {
         Printer::Scala => {
@@ -46,18 +45,13 @@ fn main() -> Result<()> {
     }
 }
 
-fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> Case
-where
-    Source: Read,
-{
+fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> Case {
     if nthreads > 1 {
-        #[cfg(debug_assertions)]
-        println!("Starting parallel processing [{} threads].", nthreads);
+        info!("Starting parallel processing [{} threads].", nthreads);
 
         parallel_process_input(input, nthreads)
     } else {
-        #[cfg(debug_assertions)]
-        println!("Starting processing [single thread].");
+        info!("Starting processing [single thread].");
 
         process_input(input)
     }
