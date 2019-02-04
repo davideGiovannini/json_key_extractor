@@ -1,7 +1,7 @@
 [package]
 name = "json_key_extractor"
 version = "0.1.1"
-authors = ["Davide Giovannini <giovannini.davide90@gmail.com>"]
+authors = ["Davide Giovannini <giovannini.davide90@gmail.com>", "Erinda Jaupaj <erindajaupi@gmail.com>"]
 edition = "2018"
 
 [dependencies]
@@ -17,6 +17,11 @@ structopt = "0.2"
 ansi_term = "0.11"
 prettytable-rs="0.8"
 atty = "0.2"
+
+log = { version = "0.4", features = ["max_level_debug", "release_max_level_warn"] }
+env_logger = "0.6"
+
+human-panic = "1.0"
 
 [dev-dependencies]
 quickcheck = "0.8"
