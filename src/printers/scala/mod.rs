@@ -76,8 +76,7 @@ impl ScalaPrinter {
                                     "{}[{}]",
                                     self.style.types.paint("List"),
                                     self.style
-                                        .types
-                                        .italic()
+                                        .types_italic
                                         .paint(title_case(&to_scala_type(val)))
                                 ),
                             );
@@ -88,7 +87,7 @@ impl ScalaPrinter {
                             format!(
                                 "{}[{}]",
                                 self.style.types.paint("List"),
-                                self.style.types.bold().paint(title_case(key))
+                                self.style.types_bold.paint(title_case(key))
                             ),
                         );
                         self.extract_classes(object, key)?;
@@ -97,7 +96,7 @@ impl ScalaPrinter {
                 Case::Object(ref object) => {
                     class.fields.insert(
                         key.clone(),
-                        self.style.types.bold().paint(title_case(key)).to_string(),
+                        self.style.types_bold.paint(title_case(key)).to_string(),
                     );
                     self.extract_classes(object, key)?;
                 }
@@ -123,23 +122,25 @@ fn title_case(string: &str) -> String {
     new_string
 }
 
+#[derive(Default)]
 pub struct ScalaStyle {
     keyword: Style,
     types: Style,
+    types_italic: Style,
+    types_bold: Style,
 }
 
 impl ScalaStyle {
     fn new(use_color: bool) -> Self {
-        let keyword = if use_color {
-            Yellow.normal()
+        if use_color {
+            ScalaStyle {
+                keyword: Yellow.normal(),
+                types: Green.normal(),
+                types_italic: Green.normal().italic(),
+                types_bold: Green.normal().bold(),
+            }
         } else {
-            Style::default()
-        };
-        let types = if use_color {
-            Green.normal()
-        } else {
-            Style::default()
-        };
-        ScalaStyle { keyword, types }
+            ScalaStyle::default()
+        }
     }
 }
