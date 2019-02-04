@@ -15,7 +15,7 @@ run-build:
   - cargo build --release --jobs 1
   artifacts:
     paths:
-    - target/release/json_key_extractor
+    - target/release/jk
   cache:
     paths:
     - target/
