@@ -1,4 +1,3 @@
-
 ## Build
 
 Make sure to have rustc and cargo installed (see [rustup](https:/./rustup.rs/)).
@@ -11,15 +10,14 @@ Run `cargo install` to install the final binary to `~/.cargo/bin`.
 
 ## Usage
 ```
-json_key_extractor 0.1.0
+json_key_extractor 0.1.1
 Davide Giovannini <giovannini.davide90@gmail.com>
 Extract structure information from a jsonl file.
 
 USAGE:
-    json_key_extractor [FLAGS] [OPTIONS] [input_path]
+    jk [OPTIONS] [input_path]
 
 FLAGS:
-    -d, --debug      Enable debug informations
     -h, --help       Prints help information
     -V, --version    Prints version information
 
