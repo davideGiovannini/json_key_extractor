@@ -6,7 +6,7 @@ Run `cargo build --release` from the project folder to build.
 
 Run `cargo run --release -- <arguments>` from the project folder to run the command with `arguments`.
 
-Run `cargo install` to install the final binary to `~/.cargo/bin`.
+Run `cargo install --path .` to install the final binary to `~/.cargo/bin`.
 
 ## Usage
 ```
