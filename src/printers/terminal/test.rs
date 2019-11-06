@@ -109,5 +109,4 @@ mod test_terminal_printer {
             .unwrap();
         assert_eq!(string_date_res, String::from_utf8(buffer).unwrap());
     }
-
 }

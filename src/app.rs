@@ -5,7 +5,7 @@ use structopt::StructOpt;
 
 /// Extract structure information from a jsonl file.
 #[derive(StructOpt, Debug)]
-#[structopt(raw(setting = "structopt::clap::AppSettings::ColoredHelp"))]
+#[structopt(setting = structopt::clap::AppSettings::ColoredHelp)]
 pub struct Args {
     /// Number of threads (defaults to the number of logical thread available)
     #[structopt(short = "n", long = "nthreads")]

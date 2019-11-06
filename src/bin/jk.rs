@@ -11,7 +11,7 @@ fn main() -> Result<()> {
 
     env_logger::Builder::new()
         .filter_level(log::LevelFilter::Debug)
-        .default_format_timestamp(false)
+        .format_timestamp(None)
         .init();
 
     let args = Args::from_args();

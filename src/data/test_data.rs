@@ -9,7 +9,7 @@ impl Arbitrary for Type {
         *choices.choose(g).unwrap()
     }
 
-    fn shrink(&self) -> Box<Iterator<Item = Type>> {
+    fn shrink(&self) -> Box<dyn Iterator<Item = Type>> {
         empty_shrinker()
     }
 }
