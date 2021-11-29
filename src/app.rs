@@ -1,5 +1,4 @@
 use crate::printers::Printer;
-use atty;
 use std::str::FromStr;
 use structopt::StructOpt;
 

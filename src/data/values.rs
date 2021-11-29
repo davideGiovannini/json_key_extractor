@@ -95,7 +95,7 @@ impl Values {
     pub fn to_vec(&self) -> Vec<Type> {
         [self.bool, self.date, self.float, self.int, self.string]
             .iter()
-            .cloned()
+            .copied()
             .flatten()
             .collect()
     }

@@ -1,12 +1,11 @@
 use super::*;
 
 use quickcheck::{empty_shrinker, quickcheck, Arbitrary, Gen};
-use rand::seq::SliceRandom;
 
 impl Arbitrary for Type {
-    fn arbitrary<G: Gen>(g: &mut G) -> Type {
+    fn arbitrary(g: &mut Gen) -> Type {
         let choices = [Type::Boolean, Type::String, Type::Int, Type::Float];
-        *choices.choose(g).unwrap()
+        g.choose(&choices).unwrap().clone()
     }
 
     fn shrink(&self) -> Box<dyn Iterator<Item = Type>> {

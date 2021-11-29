@@ -28,7 +28,7 @@ impl Array {
         if self.object.is_none() {
             self.object = object;
         } else if object.is_some() {
-            self.object = Some(self.object.take().unwrap() + object.unwrap())
+            self.object = Some(self.object.take().unwrap() + object.unwrap());
         }
     }
 
@@ -39,7 +39,7 @@ impl Array {
         } else if values.is_some() {
             // both are present
             // add them togheter
-            self.values = Some(self.values.take().unwrap() + values.unwrap())
+            self.values = Some(self.values.take().unwrap() + values.unwrap());
         }
     }
 
@@ -47,27 +47,15 @@ impl Array {
         if self.array.is_none() {
             self.array = array;
         } else if array.is_some() {
-            self.array = Some(Box::new(*self.array.take().unwrap() + *array.unwrap()))
+            self.array = Some(Box::new(*self.array.take().unwrap() + *array.unwrap()));
         }
     }
 
     pub fn len(&self) -> usize {
-        let n_values = if let Some(ref values) = self.values {
-            values.len()
-        } else {
-            0
-        };
+        let n_values = self.values.as_ref().map_or(0, Values::len);
+        let n_objects = self.object.as_ref().map_or(0, Object::len);
+        let n_array = self.array.as_ref().map_or(0, |a| a.len());
 
-        let n_objects = if let Some(ref object) = self.object {
-            object.len()
-        } else {
-            0
-        };
-        let n_array = if let Some(ref array) = self.array {
-            array.len()
-        } else {
-            0
-        };
         n_values + n_objects + n_array
     }
 
@@ -87,7 +75,7 @@ impl FromIterator<Case> for Array {
     where
         T: IntoIterator<Item = Case>,
     {
-        let mut array: Array = Default::default();
+        let mut array: Array = Array::default();
         for case in iter {
             match case {
                 Case::Values(vals) => array.add_maybe_values(Some(vals)),

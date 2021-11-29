@@ -13,7 +13,7 @@ pub struct Object {
 impl Default for Object {
     fn default() -> Self {
         Object {
-            dict: Default::default(),
+            dict: BTreeMap::default(),
         }
     }
 }

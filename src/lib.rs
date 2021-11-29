@@ -8,7 +8,7 @@ mod printers;
 pub use crate::printers::*;
 
 mod input;
-pub use crate::input::{parallel_process_input, process_input};
+pub use crate::input::{parallel_process, process};
 
 mod app;
 pub use crate::app::*;

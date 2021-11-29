@@ -5,3 +5,4 @@
 
 ** TODO try this [spmc](https://docs.rs/spmc/0.2.1/spmc/) instead of crossbeam::MSQUEUE
 ** TODO handle italian dates (dd/mm/yyyy)
+** TODO proptest instead of quickcheck

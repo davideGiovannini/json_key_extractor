@@ -10,7 +10,7 @@ use ansi_term::{
 use crate::app::ColorOption;
 
 mod class;
-use self::class::*;
+use self::class::{to_scala_type, ScalaClass};
 
 pub struct ScalaPrinter {
     classes: Vec<ScalaClass>,
@@ -113,11 +113,11 @@ fn title_case(string: &str) -> String {
     let mut chars = string.chars();
 
     if let Some(ch) = chars.next() {
-        new_string.push_str(&ch.to_uppercase().to_string())
+        new_string.push_str(&ch.to_uppercase().to_string());
     }
 
     for c in chars {
-        new_string.push(c)
+        new_string.push(c);
     }
     new_string
 }

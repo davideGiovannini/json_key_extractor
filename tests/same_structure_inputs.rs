@@ -8,6 +8,7 @@ quickcheck! {
         process_element(first) == process_element(second)
     }
 
+    // TODO fix: latest version of quickcheck has problems with this function
     fn float_values(first: f32, second: f32) -> bool {
         let first = serde_json::from_str(&format!("{}", first)).unwrap();
         let second = serde_json::from_str(&format!("{}", second)).unwrap();

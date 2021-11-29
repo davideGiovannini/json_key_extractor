@@ -1,4 +1,3 @@
-use serde_json;
 use serde_json::Value;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -7,10 +6,7 @@ use std::io::Read;
 pub use crate::data::Case;
 pub use crate::parsing::process_element;
 
-pub fn process_input<Source: Read + Sized>(input: Source) -> Case
-where
-    Source: Read,
-{
+pub fn process<Source: Read + Sized>(input: Source) -> Case {
     let input = BufReader::new(input);
 
     let mut case = Case::Null;
@@ -24,10 +20,7 @@ where
     case
 }
 
-pub fn parallel_process_input<Source: Read + Sized>(input: Source, n_threads: usize) -> Case
-where
-    Source: Read,
-{
+pub fn parallel_process<Source: Read + Sized>(input: Source, n_threads: usize) -> Case {
     use crossbeam::queue::SegQueue;
     use std::sync::mpsc::channel;
     use std::sync::{Arc, RwLock};
@@ -47,7 +40,7 @@ where
         thread::spawn(move || {
             let mut case = Case::Null;
             loop {
-                if let Some(line) = queue.pop().ok() {
+                if let Ok(line) = queue.pop() {
                     let v: Value = serde_json::from_str(&line).unwrap();
                     let new_case = process_element(v);
                     case = case + new_case;
@@ -55,7 +48,7 @@ where
                     break;
                 }
             }
-            tx.send(case).unwrap()
+            tx.send(case).unwrap();
         });
     }
 

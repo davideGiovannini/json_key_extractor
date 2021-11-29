@@ -1,8 +1,8 @@
 [package]
 name = "json_key_extractor"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Davide Giovannini <giovannini.davide90@gmail.com>", "Erinda Jaupaj <erindajaupi@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 serde_json = "1.0"
@@ -24,5 +24,5 @@ env_logger = "0.7"
 human-panic = "1.0"
 
 [dev-dependencies]
-quickcheck = "0.9"
-rand = "0.7"
+quickcheck = "1.0"
+rand = "0.8"

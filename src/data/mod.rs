@@ -5,7 +5,6 @@ use std::iter::FromIterator;
 use std::ops::Add;
 
 use lazy_static::lazy_static;
-use regex;
 
 mod values;
 pub use self::values::*;
@@ -61,19 +60,11 @@ impl Case {
     }
 
     pub fn is_object(&self) -> bool {
-        if let Case::Object(_) = self {
-            true
-        } else {
-            false
-        }
+        matches!(self, Case::Object(_))
     }
 
     pub fn is_array(&self) -> bool {
-        if let Case::Array(_) = self {
-            true
-        } else {
-            false
-        }
+        matches!(self, Case::Array(_))
     }
 }
 
@@ -90,7 +81,7 @@ impl Add for Case {
     type Output = Case;
 
     fn add(self, other: Case) -> Case {
-        use crate::Case::*;
+        use crate::Case::{Array, Null, Object, Values};
 
         match (self, other) {
             (Null, smt) | (smt, Null) => smt,

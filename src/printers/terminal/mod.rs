@@ -78,7 +78,7 @@ impl TerminalPrinter {
 
                     match case {
                         Case::Object(_) => {
-                            TerminalPrinter::process_case(table, case, style, &mut new_prefixes)
+                            TerminalPrinter::process_case(table, case, style, &mut new_prefixes);
                         }
                         Case::Array(ref arr) => {
                             if let Some(obj) = arr.object() {
@@ -88,7 +88,7 @@ impl TerminalPrinter {
                                     &Case::Object(obj.clone()),
                                     style,
                                     &mut new_prefixes,
-                                )
+                                );
                             }
                         }
                         _ => {}

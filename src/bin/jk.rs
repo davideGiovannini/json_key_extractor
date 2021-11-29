@@ -23,14 +23,14 @@ fn main() -> Result<()> {
     let result = if let Some(input_path) = args.input_path {
         let file = File::open(&input_path);
         match file {
-            Ok(file) => process(file, num_threads),
+            Ok(file) => process_with(file, num_threads),
             Err(err) => {
                 error!("Error while reading '{}': {}", &input_path, err.to_string());
                 ::std::process::exit(2)
             }
         }
     } else {
-        process(stdin(), num_threads)
+        process_with(stdin(), num_threads)
     };
 
     debug!("Beginning printing phase");
@@ -45,14 +45,14 @@ fn main() -> Result<()> {
     }
 }
 
-fn process<Source: Read + Sized>(input: Source, nthreads: usize) -> Case {
+fn process_with<Source: Read + Sized>(input: Source, nthreads: usize) -> Case {
     if nthreads > 1 {
         info!("Starting parallel processing [{} threads].", nthreads);
 
-        parallel_process_input(input, nthreads)
+        parallel_process(input, nthreads)
     } else {
         info!("Starting processing [single thread].");
 
-        process_input(input)
+        process(input)
     }
 }
