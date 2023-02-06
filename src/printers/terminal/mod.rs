@@ -6,7 +6,7 @@ use ansi_term::{
     Colour::{Green, Yellow},
     Style,
 };
-use prettytable::{cell, format, row, Table};
+use prettytable::{format, row, Table};
 
 use crate::app::ColorOption;
 

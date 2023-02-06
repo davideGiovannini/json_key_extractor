@@ -39,12 +39,12 @@ pub enum ColorOption {
 impl FromStr for ColorOption {
     type Err = String;
 
-    fn from_str(s: &str) -> Result<Self, <Self as FromStr>::Err> {
-        match s {
+    fn from_str(string: &str) -> Result<Self, <Self as FromStr>::Err> {
+        match string {
             "always" => Ok(ColorOption::Always),
             "auto" => Ok(ColorOption::Auto),
             "never" => Ok(ColorOption::Never),
-            s => Err(format!("{} is not a valid color option", s)),
+            other => Err(format!("{other} is not a valid color option")),
         }
     }
 }

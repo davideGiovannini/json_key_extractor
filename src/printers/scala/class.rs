@@ -24,7 +24,7 @@ impl ScalaClass {
             .collect::<Vec<String>>()
             .join(",\n");
 
-        writeln!(writer, "{}\n)", fields)
+        writeln!(writer, "{fields}\n)")
     }
 }
 

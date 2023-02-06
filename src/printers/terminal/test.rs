@@ -1,7 +1,7 @@
 mod test_terminal_printer {
     use crate::Case;
     use crate::TerminalPrinter;
-    use prettytable::{cell, row};
+    use prettytable::row;
 
     use serde_json::Number;
 

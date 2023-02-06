@@ -5,17 +5,9 @@ use std::ops::Add;
 
 use super::Case;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Default, Debug, PartialEq, Clone)]
 pub struct Object {
     dict: BTreeMap<String, Case>,
-}
-
-impl Default for Object {
-    fn default() -> Self {
-        Object {
-            dict: BTreeMap::default(),
-        }
-    }
 }
 
 impl fmt::Display for Object {

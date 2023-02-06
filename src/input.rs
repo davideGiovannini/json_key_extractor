@@ -40,7 +40,7 @@ pub fn parallel_process<Source: Read + Sized>(input: Source, n_threads: usize) -
         thread::spawn(move || {
             let mut case = Case::Null;
             loop {
-                if let Ok(line) = queue.pop() {
+                if let Some(line) = queue.pop() {
                     let v: Value = serde_json::from_str(&line).unwrap();
                     let new_case = process_element(v);
                     case = case + new_case;

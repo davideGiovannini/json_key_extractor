@@ -41,7 +41,7 @@ impl FromStr for Printer {
         match s {
             "scala" => Ok(Printer::Scala),
             "terminal" => Ok(Printer::Terminal),
-            other => Err(format!("{} is not a valid output type", other)),
+            other => Err(format!("{other} is not a valid output type")),
         }
     }
 }
