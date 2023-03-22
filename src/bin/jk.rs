@@ -1,8 +1,7 @@
 use structopt::StructOpt;
 
-use log::{debug, error, info};
 use std::fs::File;
-use std::io::{stdin, Read, Result};
+use std::io::{stdin, Read};
 
 use json_key_extractor::*;
 
@@ -16,7 +15,7 @@ fn main() -> Result<()> {
 
     let args = Args::from_args();
 
-    debug!("{:#?}", args);
+    log::debug!("{:#?}", args);
 
     let num_threads = args.num_threads.unwrap_or_else(num_cpus::get);
 
@@ -25,15 +24,15 @@ fn main() -> Result<()> {
         match file {
             Ok(file) => process_with(file, num_threads),
             Err(err) => {
-                error!("Error while reading '{}': {}", &input_path, err.to_string());
+                log::error!("Error while reading '{}': {}", &input_path, err.to_string());
                 ::std::process::exit(2)
             }
         }
     } else {
         process_with(stdin(), num_threads)
-    };
+    }?;
 
-    debug!("Beginning printing phase");
+    log::debug!("Beginning printing phase");
 
     match args.format {
         Printer::Scala => {
@@ -45,13 +44,13 @@ fn main() -> Result<()> {
     }
 }
 
-fn process_with<Source: Read + Sized>(input: Source, nthreads: usize) -> Case {
+fn process_with<Source: Read + Sized>(input: Source, nthreads: usize) -> Result<Case> {
     if nthreads > 1 {
-        info!("Starting parallel processing [{} threads].", nthreads);
+        log::info!("Starting parallel processing [{} threads].", nthreads);
 
         parallel_process(input, nthreads)
     } else {
-        info!("Starting processing [single thread].");
+        log::info!("Starting processing [single thread].");
 
         process(input)
     }

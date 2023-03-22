@@ -12,3 +12,6 @@ pub use crate::input::{parallel_process, process};
 
 mod app;
 pub use crate::app::*;
+
+mod error;
+pub use self::error::*;

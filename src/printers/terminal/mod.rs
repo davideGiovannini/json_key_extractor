@@ -1,6 +1,6 @@
 use super::CasePrinter;
 use crate::data::Case;
-use std::io::{Result, Write};
+use std::io::Write;
 
 use ansi_term::{
     Colour::{Green, Yellow},
@@ -17,7 +17,12 @@ mod test;
 pub struct TerminalPrinter;
 
 impl CasePrinter for TerminalPrinter {
-    fn write<W>(&mut self, writer: &mut W, case: &Case, color_option: ColorOption) -> Result<()>
+    fn write<W>(
+        &mut self,
+        writer: &mut W,
+        case: &Case,
+        color_option: ColorOption,
+    ) -> crate::Result<()>
     where
         W: Write,
     {
@@ -28,7 +33,8 @@ impl CasePrinter for TerminalPrinter {
         let mut prefixes = Vec::new();
         TerminalPrinter::process_case(&mut table, case, &style, &mut prefixes);
 
-        table.print(writer).map(|_| ())
+        table.print(writer).map(|_| ())?;
+        Ok(())
     }
 }
 

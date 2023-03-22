@@ -1,6 +1,6 @@
 use super::CasePrinter;
 use crate::data::{Case, Object};
-use std::io::{Result, Write};
+use std::io::Write;
 
 use ansi_term::{
     Colour::{Green, Yellow},
@@ -18,7 +18,7 @@ pub struct ScalaPrinter {
 }
 
 impl CasePrinter for ScalaPrinter {
-    fn write<W>(&mut self, writer: &mut W, case: &Case, _: ColorOption) -> Result<()>
+    fn write<W>(&mut self, writer: &mut W, case: &Case, _: ColorOption) -> crate::Result<()>
     where
         W: Write,
     {
@@ -45,7 +45,7 @@ impl ScalaPrinter {
         }
     }
 
-    fn extract_classes(&mut self, object: &Object, name: &str) -> Result<()> {
+    fn extract_classes(&mut self, object: &Object, name: &str) -> crate::Result<()> {
         let mut class = ScalaClass::default();
 
         class.name.push_str(&title_case(name));

@@ -1,6 +1,6 @@
 use crate::data::Case;
 
-use std::{io, io::Write};
+use std::io::Write;
 
 mod terminal;
 pub use self::terminal::*;
@@ -17,7 +17,7 @@ pub trait CasePrinter {
         writer: &mut W,
         case: &Case,
         color_option: ColorOption,
-    ) -> io::Result<()>
+    ) -> crate::Result<()>
     where
         W: Write;
 }
