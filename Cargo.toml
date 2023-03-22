@@ -1,7 +1,7 @@
 [package]
 name = "json_key_extractor"
-version = "0.1.3"
-authors = ["Davide Giovannini <giovannini.davide90@gmail.com>", "Erinda Jaupaj <erindajaupi@gmail.com>"]
+version = "0.1.4"
+authors = ["Davide Giovannini <giovannini.davide90@gmail.com>"]
 edition = "2021"
 
 [dependencies]

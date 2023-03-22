@@ -22,16 +22,11 @@ pub trait CasePrinter {
         W: Write;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub enum Printer {
     Scala,
+    #[default]
     Terminal,
-}
-
-impl Default for Printer {
-    fn default() -> Self {
-        Printer::Terminal
-    }
 }
 
 impl FromStr for Printer {

@@ -37,6 +37,7 @@ impl CasePrinter for ScalaPrinter {
 }
 
 impl ScalaPrinter {
+    #[must_use]
     pub fn new(color_option: ColorOption) -> Self {
         ScalaPrinter {
             classes: Vec::default(),

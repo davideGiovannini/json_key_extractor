@@ -50,6 +50,7 @@ impl FromStr for ColorOption {
 }
 
 impl ColorOption {
+    #[must_use]
     pub fn should_use_color(self) -> bool {
         match self {
             ColorOption::Always => true,

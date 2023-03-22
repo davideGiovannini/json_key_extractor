@@ -31,6 +31,7 @@ pub enum Case {
 }
 
 impl Case {
+    #[must_use]
     pub fn from_number(number: &Number) -> Case {
         if number.is_f64() {
             Case::Values(Values::new(Type::Float))
@@ -39,10 +40,11 @@ impl Case {
         }
     }
 
+    #[must_use]
     pub fn from_boolean() -> Case {
         Case::Values(Values::new(Type::Boolean))
     }
-
+    #[must_use]
     pub fn from_string(string: &str) -> Case {
         lazy_static! {
             static ref DATE_REGEXP: regex::Regex = regex::Regex::new(DATE_PATTERN).unwrap();
@@ -55,14 +57,17 @@ impl Case {
         Case::Values(Values::new(data_type))
     }
 
+    #[must_use]
     pub fn from_dict(dict: BTreeMap<String, Case>) -> Case {
         Case::Object(Object::from(dict))
     }
 
+    #[must_use]
     pub fn is_object(&self) -> bool {
         matches!(self, Case::Object(_))
     }
 
+    #[must_use]
     pub fn is_array(&self) -> bool {
         matches!(self, Case::Array(_))
     }
