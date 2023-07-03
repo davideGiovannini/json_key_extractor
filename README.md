@@ -20,7 +20,7 @@ $ jk test.json
 +-------------------+----------+
 ```
 
-It can also generate the code for de/serializing in scala.
+It can also generate the code for de/serializing in scala or Rust.
 
 ```commandline
 jk test.json -tscala
@@ -38,6 +38,32 @@ case class RenameMe(
     orders_id: List[Int],
     surname: String
 )
+```
+
+-----
+
+```commandline
+jk test.json -trust
+```
+
+```rust
+use serde::{Deserialize, Serialize};
+
+pub type Date = String;
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Address {
+    cap: i64,
+    country: String,
+    street: String
+}
+#[derive(Debug, Deserialize, Serialize)]
+pub struct RenameMe {
+    address: Address,
+    name: String,
+    orders_id: Vec<i64>,
+    surname: String
+}
 ```
 
 ## Build
