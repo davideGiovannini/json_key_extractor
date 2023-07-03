@@ -35,9 +35,11 @@ fn main() -> Result<()> {
     log::debug!("Beginning printing phase");
 
     match args.format {
-        Printer::Scala => {
-            ScalaPrinter::new(args.color).write(&mut std::io::stdout(), &result, args.color)
-        }
+        Printer::Code(language) => CodePrinter::new(language, args.color).write(
+            &mut std::io::stdout(),
+            &result,
+            args.color,
+        ),
         Printer::Terminal => {
             TerminalPrinter::default().write(&mut std::io::stdout(), &result, args.color)
         }

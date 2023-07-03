@@ -5,11 +5,12 @@ use std::io::Write;
 mod terminal;
 pub use self::terminal::*;
 
-mod scala;
-pub use self::scala::*;
+mod code;
+pub use self::code::*;
 use std::str::FromStr;
 
 use crate::app::ColorOption;
+use crate::language::{Language, Rust, Scala};
 
 pub trait CasePrinter {
     fn write<W>(
@@ -24,7 +25,7 @@ pub trait CasePrinter {
 
 #[derive(Debug, Default)]
 pub enum Printer {
-    Scala,
+    Code(Box<dyn Language>),
     #[default]
     Terminal,
 }
@@ -34,7 +35,8 @@ impl FromStr for Printer {
 
     fn from_str(s: &str) -> Result<Self, <Self as FromStr>::Err> {
         match s {
-            "scala" => Ok(Printer::Scala),
+            "scala" => Ok(Printer::Code(Box::new(Scala))),
+            "rust" => Ok(Printer::Code(Box::new(Rust))),
             "terminal" => Ok(Printer::Terminal),
             other => Err(format!("{other} is not a valid output type")),
         }

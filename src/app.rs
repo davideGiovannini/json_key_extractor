@@ -14,7 +14,7 @@ pub struct Args {
     #[structopt()]
     pub input_path: Option<String>,
 
-    /// Default output format. Can be one of (scala, terminal)
+    /// Default output format. Can be one of (scala, rust, terminal)
     #[structopt(short = "t", long = "type", default_value = "terminal")]
     pub format: Printer,
 

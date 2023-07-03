@@ -1,6 +1,6 @@
 [package]
 name = "json_key_extractor"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Davide Giovannini <giovannini.davide90@gmail.com>"]
 edition = "2021"
 
